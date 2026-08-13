@@ -28,8 +28,10 @@
 
 
 
-const interviewd = document.getElementById("interviewed") as HTMLDivElement;
+const interviewed = document.getElementById("interviewed") as HTMLDivElement;
 const applied = document.getElementById("applied") as HTMLDivElement;
+const offered = document.getElementById("offered") as HTMLDivElement;
+const rejected = document.getElementById("rejected") as HTMLDivElement; 
 
 document.querySelectorAll<HTMLDivElement>(".job").forEach((job)=>{
     job.addEventListener("dragstart", (event)=>{
@@ -38,15 +40,12 @@ document.querySelectorAll<HTMLDivElement>(".job").forEach((job)=>{
 })
 
 })
-interviewd.addEventListener("dragover", (e)=>{
+interviewed.addEventListener("dragover", (e)=>{
     e.preventDefault();
 })
 
-interviewd.addEventListener("drop", (event)=>{
-    const jobId = event.dataTransfer?.getData("text/plain")!;
-    const job = document.getElementById(jobId) as HTMLDivElement;
-    interviewd.append(job);
-    console.log(jobId)
+interviewed.addEventListener("drop", (event)=>{
+    addJob(event, interviewed);
 })
 
 applied.addEventListener("dragover", (e)=>{
@@ -54,9 +53,29 @@ applied.addEventListener("dragover", (e)=>{
 })
 
 applied.addEventListener("drop", (event)=>{
-    // resaubality - add a resusable function
-    const jobId = event.dataTransfer?.getData("text/plain")!;
-    const job = document.getElementById(jobId) as HTMLDivElement;
-    applied.append(job);
-    console.log(jobId)
+    addJob(event, applied);
 })
+
+offered.addEventListener("dragover", (event)=>{
+    event.preventDefault();
+})
+
+offered.addEventListener("drop", (event)=>{
+    addJob(event, offered);
+});
+
+rejected.addEventListener("dragover", (event)=>{
+    event.preventDefault();
+})
+
+rejected.addEventListener("drop", (event)=>{
+    addJob(event, rejected);
+});
+
+
+
+function addJob(event: DragEvent, board: HTMLDivElement): void{
+    const id = event.dataTransfer?.getData("text/plain")!;
+    const job = document.getElementById(id) as HTMLDivElement;
+    board.append(job)
+}

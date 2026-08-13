@@ -10,19 +10,30 @@
 
 <body>
     <h1 class="text-2xl text-fuchsia-800">Job Tracker</h1>
-    <div class="flex items-center w-screen gap-10">
-        <div id="applied" class="flex flex-col items-center gap-2 p-4 bg-blue-300 h-100 w-80">
-            <div id="job-1" draggable="true" class="h-40 job w-70 bg-cyan-400">
+    <div id="Kanban-board" class="flex items-center w-screen gap-10 h-100">
+        <div id="applied" class="flex flex-col items-center flex-1 h-full gap-2 p-4 overflow-y-auto bg-blue-300">
+            <h2>Applied</h2>
+            <div id="job-1" draggable="true" class="w-full cursor-pointer min-h-40 job bg-cyan-400">
                 <h5>Job: Software developer</h5>
                 <p>Company: TechStart</p>
             </div>
-            <div id="job-2" draggable="true" class="h-40 job w-70 bg-cyan-400">
+            <div id="job-2" draggable="true" class="w-full cursor-pointer min-h-40 job bg-cyan-400">
+                <h5>Job: Software Engineer</h5>
+                <p>Company: Enginocore</p>
+            </div>
+            <div id="job-3" draggable="true" class="w-full cursor-pointer min-h-40 job bg-cyan-400">
                 <h5>Job: Software Engineer</h5>
                 <p>Company: Enginocore</p>
             </div>
         </div>
-        <div id="interviewed" class="flex flex-col items-center p-10 h-100 w-80 bg-fuchsia-300">
-
+        <div id="interviewed" class="flex flex-col items-center flex-1 h-full gap-2 p-4 overflow-y-auto bg-fuchsia-300">
+            <h2>Interview</h2>
+        </div>
+        <div id="offered" class="flex flex-col items-center flex-1 h-full gap-2 p-4 overflow-y-auto bg-fuchsia-300">
+            <h2>Offered</h2>
+        </div>
+        <div id="rejected" class="flex flex-col items-center flex-1 h-full gap-2 p-4 overflow-y-auto bg-fuchsia-300">
+            <h2>Rejected</h2>
         </div>
     </div>
 
