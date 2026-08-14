@@ -139,10 +139,23 @@ function findBoard(jobStatus) {
         return rejected;
     }
 }
+function addJob(event, board, status) {
+    var _a;
+    const id = (_a = event.dataTransfer) === null || _a === void 0 ? void 0 : _a.getData("text/plain");
+    const job = document.getElementById(id);
+    board.firstElementChild.after(job);
+    // update array
+    const currentJob = jobs.find((job) => job.id === id);
+    currentJob.status = status;
+    updateKanbanCounts();
+}
 const interviewed = document.getElementById("interviewed");
 const applied = document.getElementById("applied");
 const offered = document.getElementById("offered");
 const rejected = document.getElementById("rejected");
+const applicaitonButton = document.getElementById("add-application-button");
+const modalClose = document.getElementById("modal-close-button");
+const modal = document.getElementById("modal-overlay");
 jobs.forEach((job) => {
     createJobCard(job, findBoard(job.status));
 });
@@ -180,13 +193,11 @@ rejected.addEventListener("dragover", (event) => {
 rejected.addEventListener("drop", (event) => {
     addJob(event, rejected, 3 /* JobStatus.rejected */);
 });
-function addJob(event, board, status) {
-    var _a;
-    const id = (_a = event.dataTransfer) === null || _a === void 0 ? void 0 : _a.getData("text/plain");
-    const job = document.getElementById(id);
-    board.firstElementChild.after(job);
-    // update array
-    const currentJob = jobs.find((job) => job.id === id);
-    currentJob.status = status;
-    updateKanbanCounts();
-}
+applicaitonButton.addEventListener("click", () => {
+    modal.classList.add("flex");
+    modal.classList.remove("hidden");
+});
+modalClose.addEventListener("click", () => {
+    modal.classList.add("hidden");
+    modal.classList.remove("flex");
+});

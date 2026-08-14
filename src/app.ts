@@ -243,10 +243,33 @@ function findBoard(jobStatus: JobStatus): HTMLDivElement {
   }
 }
 
+function addJob(
+  event: DragEvent,
+  board: HTMLDivElement,
+  status: JobStatus,
+): void {
+  const id = event.dataTransfer?.getData("text/plain")!;
+  const job = document.getElementById(id) as HTMLDivElement;
+  board.firstElementChild!.after(job);
+
+  // update array
+  const currentJob = jobs.find((job) => job.id === id);
+  currentJob!.status = status;
+
+  updateKanbanCounts();
+}
+
 const interviewed = document.getElementById("interviewed") as HTMLDivElement;
 const applied = document.getElementById("applied") as HTMLDivElement;
 const offered = document.getElementById("offered") as HTMLDivElement;
 const rejected = document.getElementById("rejected") as HTMLDivElement;
+const applicaitonButton = document.getElementById(
+  "add-application-button",
+) as HTMLButtonElement;
+const modalClose = document.getElementById(
+  "modal-close-button",
+) as HTMLButtonElement;
+const modal = document.getElementById("modal-overlay") as HTMLDivElement;
 
 jobs.forEach((job) => {
   createJobCard(job, findBoard(job.status));
@@ -295,14 +318,12 @@ rejected.addEventListener("drop", (event: DragEvent) => {
   addJob(event, rejected, JobStatus.rejected);
 });
 
-function addJob(event: DragEvent, board: HTMLDivElement, status: JobStatus): void {
-  const id = event.dataTransfer?.getData("text/plain")!;
-  const job = document.getElementById(id) as HTMLDivElement;
-  board.firstElementChild!.after(job);
+applicaitonButton.addEventListener("click", () => {
+  modal.classList.add("flex");
+  modal.classList.remove("hidden");
+});
 
-  // update array
-  const currentJob = jobs.find((job)=> job.id === id);
-  currentJob!.status = status;
-
-  updateKanbanCounts();
-}
+modalClose.addEventListener("click", () => {
+  modal.classList.add("hidden");
+  modal.classList.remove("flex");
+});

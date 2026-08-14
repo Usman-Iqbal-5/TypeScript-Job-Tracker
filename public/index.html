@@ -26,7 +26,7 @@
                 <p class="text-xs text-white font-extralight">Overview of your job applications</p>
             </div>
         </div>
-        <button class="p-2 text-xs text-white bg-indigo-600 rounded-lg cursor-pointer hover:bg-indigo-800">
+        <button id="add-application-button" class="p-2 text-xs text-white bg-indigo-600 rounded-lg cursor-pointer hover:bg-indigo-800">
             &#43; Add Applicaiton
         </button>
     </header>
@@ -79,6 +79,18 @@
 
 
 
+    <!--Modal-->
+    <div id="modal-overlay" class="fixed inset-0 items-center justify-center hidden bg-black/30">
+        <div id="modal" class="p-5 bg-white rounded-lg min-w-1/2 min-h-4/5">
+            <div id="grid-layout" class="grid grid-cols-6 grid-row-[auto]">
+                <button
+                    id="modal-close-button"
+                    class="flex items-center justify-center h-8 col-start-6 p-2 text-sm text-white bg-indigo-600 rounded-lg cursor-pointer hover:bg-indigo-800">
+                    close
+                </button>
+            </div>
+        </div>
+    </div>
 
 
 
