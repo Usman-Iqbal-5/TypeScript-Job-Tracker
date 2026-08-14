@@ -6,37 +6,59 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Job Tracker</title>
     <link href="./styles/output.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&family=Playwrite+GB+S:ital,wght@0,100..400;1,100..400&display=swap"
+        rel="stylesheet">
 </head>
 
-<body>
-    <h1 class="text-2xl text-fuchsia-800">Job Tracker</h1>
-    <div id="Kanban-board" class="flex items-center w-screen gap-10 h-100">
-        <div id="applied" class="flex flex-col items-center flex-1 h-full gap-2 p-4 overflow-y-auto bg-blue-300">
-            <h2>Applied</h2>
-            <div id="job-1" draggable="true" class="w-full cursor-pointer min-h-40 job bg-cyan-400">
-                <h5>Job: Software developer</h5>
-                <p>Company: TechStart</p>
+<body class="bg-[#142030] font-[Manrope]">
+    <h1 class="text-2xl text-indigo-800">Job Tracker</h1>
+    <div id="Kanban-board" class="flex items-center min-w-fit w-10/12 gap-2 p-5 bg-[#F6F5F8] rounded-lg h-100">
+        <section id="applied-section"
+            class="flex-1 h-full border-t-4 rounded-lg shadow-[0_0_10px_rgba(0,0,0,0.15)] border-t-blue-500 bg-gray-100">
+            <div id="applied"
+                class="flex flex-col items-center h-full gap-2 p-2 overflow-y-auto [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:bg-transparent">
+                <div class="flex items-center w-full text-left gap-2">
+                    <h2 class="font-bold">Applied</h2><span id="kanban-applied-nubmber"
+                        class="text-sm text-center text-blue-500 bg-blue-100 rounded-full min-h-5 min-w-5">10</span>
+                </div>
             </div>
-            <div id="job-2" draggable="true" class="w-full cursor-pointer min-h-40 job bg-cyan-400">
-                <h5>Job: Software Engineer</h5>
-                <p>Company: Enginocore</p>
-            </div>
-            <div id="job-3" draggable="true" class="w-full cursor-pointer min-h-40 job bg-cyan-400">
-                <h5>Job: Software Engineer</h5>
-                <p>Company: Enginocore</p>
-            </div>
-        </div>
-        <div id="interviewed" class="flex flex-col items-center flex-1 h-full gap-2 p-4 overflow-y-auto bg-fuchsia-300">
-            <h2>Interview</h2>
-        </div>
-        <div id="offered" class="flex flex-col items-center flex-1 h-full gap-2 p-4 overflow-y-auto bg-fuchsia-300">
-            <h2>Offered</h2>
-        </div>
-        <div id="rejected" class="flex flex-col items-center flex-1 h-full gap-2 p-4 overflow-y-auto bg-fuchsia-300">
-            <h2>Rejected</h2>
-        </div>
-    </div>
+        </section>
+        <section id="interview-section"
+            class="flex-1 h-full border border-t-4 rounded-lg shadow-[0_0_10px_rgba(0,0,0,0.15)] border-black/10 border-t-orange-500">
+            <div id="interviewed"
+                class="flex flex-col items-center h-full gap-2 p-2 overflow-y-auto  [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:bg-transparent">
+                <div class="flex items-center w-full text-left gap-2">
+                    <h2 class="font-bold">Interview</h2><span id="kanban-interviewed-nubmber"
+                        class="text-sm text-center text-orange-500 bg-orange-100 rounded-full min-h-5 min-w-5">10</span>
+                </div>
 
+            </div>
+        </section>
+        <section id="offered-section"
+            class="flex-1 h-full border border-t-4 rounded-lg shadow-[0_0_10px_rgba(0,0,0,0.15)] border-black/10 border-t-green-500">
+            <div id="offered"
+                class="flex flex-col items-center h-full gap-2 p-2 overflow-y-auto  [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:bg-transparent">
+                <div class="flex items-center w-full text-left gap-2">
+                    <h2 class="font-bold">Offered</h2><span id="kanban-offered-nubmber"
+                        class="text-sm text-center text-green-500 bg-green-100 rounded-full min-h-5 min-w-5">10</span>
+                </div>
+            </div>
+        </section>
+        <section id="rejected-section"
+            class="flex-1 h-full border border-t-4 rounded-lg shadow-[0_0_10px_rgba(0,0,0,0.15)] border-black/10 border-t-red-500">
+            <div id="rejected"
+                class="flex flex-col items-center h-full gap-2 p-2 overflow-y-auto  [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:bg-transparent">
+                <div class="flex items-center w-full text-left gap-2">
+                    <h2 class="font-bold">Rejected</h2><span id="kanban-rejected-nubmber"
+                        class="text-sm text-center text-red-500 bg-red-100 rounded-full min-h-5 min-w-5">0</span>
+                </div>
+            </div>
+        </section>
+
+    </div>
 
     <script src="./dist/app.js"></script>
 </body>
