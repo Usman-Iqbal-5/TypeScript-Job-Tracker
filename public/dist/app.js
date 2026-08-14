@@ -1,11 +1,4 @@
 "use strict";
-var JobStatus;
-(function (JobStatus) {
-    JobStatus[JobStatus["applied"] = 0] = "applied";
-    JobStatus[JobStatus["interviewed"] = 1] = "interviewed";
-    JobStatus[JobStatus["offered"] = 2] = "offered";
-    JobStatus[JobStatus["rejected"] = 3] = "rejected";
-})(JobStatus || (JobStatus = {}));
 const jobs = [
     {
         id: crypto.randomUUID(),
@@ -16,7 +9,7 @@ const jobs = [
         url: "www.indeed.com",
         rating: 1,
         notes: "Good match of skills",
-        status: JobStatus.applied,
+        status: 0 /* JobStatus.applied */,
     },
     {
         id: crypto.randomUUID(),
@@ -27,9 +20,23 @@ const jobs = [
         url: "www.indeed.com",
         rating: 5,
         notes: "Good match of skills",
-        status: JobStatus.offered,
+        status: 2 /* JobStatus.offered */,
     },
 ];
+function updateKanbanCounts() {
+    const appliedCount = document.querySelector("#kanban-applied-number");
+    const interviewedCount = document.querySelector("#kanban-interviewed-number");
+    const offeredCount = document.querySelector("#kanban-offered-number");
+    const rejectedCount = document.querySelector("#kanban-rejected-number");
+    const appliedNum = jobs.filter((job) => job.status === 0 /* JobStatus.applied */).length;
+    appliedCount.textContent = String(appliedNum);
+    const interviewdNum = jobs.filter((job) => job.status === 1 /* JobStatus.interviewed */).length;
+    interviewedCount.textContent = String(interviewdNum);
+    const offeredNum = jobs.filter((job) => job.status === 2 /* JobStatus.offered */).length;
+    offeredCount.textContent = String(offeredNum);
+    const rejectedNum = jobs.filter((job) => job.status === 3 /* JobStatus.rejected */).length;
+    rejectedCount.textContent = String(rejectedNum);
+}
 function createJobCard(job, board) {
     // job card
     const card = document.createElement("div");
@@ -119,13 +126,13 @@ function createIcon(classes, pathString) {
     return svg;
 }
 function findBoard(jobStatus) {
-    if (jobStatus === JobStatus.applied) {
+    if (jobStatus === 0 /* JobStatus.applied */) {
         return applied;
     }
-    else if (jobStatus === JobStatus.interviewed) {
+    else if (jobStatus === 1 /* JobStatus.interviewed */) {
         return interviewed;
     }
-    else if (jobStatus === JobStatus.offered) {
+    else if (jobStatus === 2 /* JobStatus.offered */) {
         return offered;
     }
     else {
@@ -139,6 +146,7 @@ const rejected = document.getElementById("rejected");
 jobs.forEach((job) => {
     createJobCard(job, findBoard(job.status));
 });
+updateKanbanCounts();
 document
     .querySelectorAll(".job")
     .forEach((job) => {
@@ -152,29 +160,33 @@ interviewed.addEventListener("dragover", (e) => {
     e.preventDefault();
 });
 interviewed.addEventListener("drop", (event) => {
-    addJob(event, interviewed);
+    addJob(event, interviewed, 1 /* JobStatus.interviewed */);
 });
 applied.addEventListener("dragover", (e) => {
     e.preventDefault();
 });
 applied.addEventListener("drop", (event) => {
-    addJob(event, applied);
+    addJob(event, applied, 0 /* JobStatus.applied */);
 });
 offered.addEventListener("dragover", (event) => {
     event.preventDefault();
 });
 offered.addEventListener("drop", (event) => {
-    addJob(event, offered);
+    addJob(event, offered, 2 /* JobStatus.offered */);
 });
 rejected.addEventListener("dragover", (event) => {
     event.preventDefault();
 });
 rejected.addEventListener("drop", (event) => {
-    addJob(event, rejected);
+    addJob(event, rejected, 3 /* JobStatus.rejected */);
 });
-function addJob(event, board) {
+function addJob(event, board, status) {
     var _a;
     const id = (_a = event.dataTransfer) === null || _a === void 0 ? void 0 : _a.getData("text/plain");
     const job = document.getElementById(id);
     board.firstElementChild.after(job);
+    // update array
+    const currentJob = jobs.find((job) => job.id === id);
+    currentJob.status = status;
+    updateKanbanCounts();
 }

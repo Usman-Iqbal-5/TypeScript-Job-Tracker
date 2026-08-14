@@ -13,7 +13,7 @@ interface job {
   status: JobStatus;
 }
 
-enum JobStatus {
+const enum JobStatus {
   applied,
   interviewed,
   offered,
@@ -32,7 +32,7 @@ const jobs: job[] = [
     notes: "Good match of skills",
     status: JobStatus.applied,
   },
-   {
+  {
     id: crypto.randomUUID(),
     title: "Software Developer",
     company: "TechFin",
@@ -44,6 +44,40 @@ const jobs: job[] = [
     status: JobStatus.offered,
   },
 ];
+
+function updateKanbanCounts() {
+  const appliedCount = document.querySelector<HTMLSpanElement>(
+    "#kanban-applied-number",
+  );
+  const interviewedCount = document.querySelector<HTMLSpanElement>(
+    "#kanban-interviewed-number",
+  );
+  const offeredCount = document.querySelector<HTMLSpanElement>(
+    "#kanban-offered-number",
+  );
+  const rejectedCount = document.querySelector<HTMLSpanElement>(
+    "#kanban-rejected-number",
+  );
+
+  const appliedNum = jobs.filter(
+    (job) => job.status === JobStatus.applied,
+  ).length;
+  appliedCount!.textContent = String(appliedNum);
+
+  const interviewdNum = jobs.filter(
+    (job) => job.status === JobStatus.interviewed,
+  ).length;
+  interviewedCount!.textContent = String(interviewdNum);
+
+  const offeredNum = jobs.filter(
+    (job) => job.status === JobStatus.offered,
+  ).length;
+  offeredCount!.textContent = String(offeredNum);
+  const rejectedNum = jobs.filter(
+    (job) => job.status === JobStatus.rejected,
+  ).length;
+  rejectedCount!.textContent = String(rejectedNum);
+}
 
 function createJobCard(job: job, board: HTMLDivElement): void {
   // job card
@@ -167,7 +201,7 @@ function createJobCard(job: job, board: HTMLDivElement): void {
   const date = new Date(job.appliedDate).toLocaleDateString("en-GB");
   datestamp.textContent = date;
 
-  cardFooter.append(datestamp)
+  cardFooter.append(datestamp);
 
   // appending
   card.append(titleSection);
@@ -197,16 +231,16 @@ function createIcon(classes: string[], pathString: string): SVGSVGElement {
   return svg;
 }
 
-function findBoard(jobStatus: JobStatus): HTMLDivElement{
-    if(jobStatus === JobStatus.applied){
-        return applied;
-    } else if (jobStatus === JobStatus.interviewed){
-        return interviewed
-    } else if (jobStatus === JobStatus.offered){
-        return offered;
-    } else {
-        return rejected
-    }
+function findBoard(jobStatus: JobStatus): HTMLDivElement {
+  if (jobStatus === JobStatus.applied) {
+    return applied;
+  } else if (jobStatus === JobStatus.interviewed) {
+    return interviewed;
+  } else if (jobStatus === JobStatus.offered) {
+    return offered;
+  } else {
+    return rejected;
+  }
 }
 
 const interviewed = document.getElementById("interviewed") as HTMLDivElement;
@@ -214,9 +248,11 @@ const applied = document.getElementById("applied") as HTMLDivElement;
 const offered = document.getElementById("offered") as HTMLDivElement;
 const rejected = document.getElementById("rejected") as HTMLDivElement;
 
-jobs.forEach((job)=>{
-    createJobCard(job, findBoard(job.status));
-})
+jobs.forEach((job) => {
+  createJobCard(job, findBoard(job.status));
+});
+
+updateKanbanCounts();
 
 document
   .querySelectorAll<HTMLDivElement>(".job")
@@ -232,7 +268,7 @@ interviewed.addEventListener("dragover", (e) => {
 });
 
 interviewed.addEventListener("drop", (event: DragEvent) => {
-  addJob(event, interviewed);
+  addJob(event, interviewed, JobStatus.interviewed);
 });
 
 applied.addEventListener("dragover", (e) => {
@@ -240,7 +276,7 @@ applied.addEventListener("dragover", (e) => {
 });
 
 applied.addEventListener("drop", (event: DragEvent) => {
-  addJob(event, applied);
+  addJob(event, applied, JobStatus.applied);
 });
 
 offered.addEventListener("dragover", (event: DragEvent) => {
@@ -248,7 +284,7 @@ offered.addEventListener("dragover", (event: DragEvent) => {
 });
 
 offered.addEventListener("drop", (event: DragEvent) => {
-  addJob(event, offered);
+  addJob(event, offered, JobStatus.offered);
 });
 
 rejected.addEventListener("dragover", (event: DragEvent) => {
@@ -256,11 +292,17 @@ rejected.addEventListener("dragover", (event: DragEvent) => {
 });
 
 rejected.addEventListener("drop", (event: DragEvent) => {
-  addJob(event, rejected);
+  addJob(event, rejected, JobStatus.rejected);
 });
 
-function addJob(event: DragEvent, board: HTMLDivElement): void {
+function addJob(event: DragEvent, board: HTMLDivElement, status: JobStatus): void {
   const id = event.dataTransfer?.getData("text/plain")!;
   const job = document.getElementById(id) as HTMLDivElement;
   board.firstElementChild!.after(job);
+
+  // update array
+  const currentJob = jobs.find((job)=> job.id === id);
+  currentJob!.status = status;
+
+  updateKanbanCounts();
 }

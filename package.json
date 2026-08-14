@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "start": "lite-server --baseDir=public",
-    "tailwind": "npx @tailwindcss/cli -i ./css/input.css -o ./public/styles/output.css --watch"
+    "tailwind": "npx @tailwindcss/cli -i ./css/input.css -o ./public/styles/output.css --watch",
+    "build": "tsc && npx @tailwindcss/cli -i ./css/input.css -o ./public/styles/output.css"
   },
   "keywords": [],
   "author": "",
