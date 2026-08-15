@@ -17,7 +17,7 @@ const jobs = [
         company: "TechFin",
         location: "Birmingham, UK",
         appliedDate: Date.now(),
-        url: "www.indeed.com",
+        url: "https://www.google.com/",
         rating: 5,
         notes: "Good match of skills",
         status: 2 /* JobStatus.offered */,
@@ -149,6 +149,61 @@ function addJob(event, board, status) {
     currentJob.status = status;
     updateKanbanCounts();
 }
+function updateStarRating() {
+    const stars = document.querySelectorAll(".star");
+    let clickedRating = 0;
+    stars.forEach((star) => {
+        star.addEventListener("mouseenter", () => {
+            const starId = Number(star.dataset.rating);
+            if (clickedRating > 0) {
+                updateStarUI(0, "outline");
+            }
+            updateStarUI(starId, "full");
+        });
+        star.addEventListener("mouseleave", () => {
+            const starId = Number(star.dataset.rating);
+            updateStarUI(starId, "outline");
+            if (clickedRating) {
+                updateStarUI(clickedRating, "full");
+            }
+        });
+        star.addEventListener("click", () => {
+            const starId = Number(star.dataset.rating);
+            clickedRating = starId;
+            updateStarUI(starId, "full");
+        });
+    });
+}
+function updateStarUI(id, state) {
+    const stars = document.querySelectorAll(".star");
+    const message = document.querySelector("#star-rating #message");
+    let newStarState = "&starf;";
+    const messages = [
+        "Minimal alignment with the required skills",
+        "Limited alignment with the required skills",
+        "A stretch, with several skills to develop",
+        "Strong alignment, with most skills covered",
+        "Full alignment with the required skills",
+    ];
+    if (state === "outline") {
+        newStarState = `&star;`;
+    }
+    stars.forEach((star) => {
+        const starId = Number(star.dataset.rating);
+        if (id === 0) {
+            star.innerHTML = "&star;";
+        }
+        else if (starId <= id) {
+            star.innerHTML = newStarState;
+        }
+    });
+    if (state === "outline") {
+        message.innerHTML = "";
+    }
+    else {
+        message.innerHTML = messages[id - 1];
+    }
+}
 const interviewed = document.getElementById("interviewed");
 const applied = document.getElementById("applied");
 const offered = document.getElementById("offered");
@@ -196,6 +251,7 @@ rejected.addEventListener("drop", (event) => {
 applicaitonButton.addEventListener("click", () => {
     modal.classList.add("flex");
     modal.classList.remove("hidden");
+    updateStarRating();
 });
 modalClose.addEventListener("click", () => {
     modal.classList.add("hidden");

@@ -26,11 +26,11 @@
                 <p class="text-xs text-white font-extralight">Overview of your job applications</p>
             </div>
         </div>
-        <button id="add-application-button" class="p-2 text-xs text-white bg-indigo-600 rounded-lg cursor-pointer hover:bg-indigo-800">
+        <button id="add-application-button"
+            class="p-2 text-xs text-white bg-indigo-600 rounded-lg cursor-pointer hover:bg-indigo-800">
             &#43; Add Applicaiton
         </button>
     </header>
-
     <main class="flex justify-center w-full">
         <section id="Kanban-board" class="flex items-center min-w-fit w-10/12 gap-2 p-5 bg-[#F6F5F8] rounded-lg h-100">
             <section id="applied-section"
@@ -76,26 +76,120 @@
             </section>
         </section>
     </main>
-
-
-
     <!--Modal-->
-    <div id="modal-overlay" class="fixed inset-0 items-center justify-center hidden bg-black/30">
-        <div id="modal" class="p-5 bg-white rounded-lg min-w-1/2 min-h-4/5">
-            <div id="grid-layout" class="grid grid-cols-6 grid-row-[auto]">
-                <button
-                    id="modal-close-button"
-                    class="flex items-center justify-center h-8 col-start-6 p-2 text-sm text-white bg-indigo-600 rounded-lg cursor-pointer hover:bg-indigo-800">
-                    close
+    <div id="modal-overlay" class="fixed inset-0 items-start justify-center hidden overflow-y-scroll bg-black/30">
+        <div id="modal" class="w-1/2 p-5 my-10 bg-white rounded-lg max-w-1/2 min-h-4/5">
+            <div id="modal-header" class="flex justify-between">
+                <div>
+                    <h3 class="text-sm font-bold capitalize caret-indigo-50">Add new application</h3>
+                    <p class="text-xs font-normal text-gray-500">Fill in the details of the job application</p>
+                </div>
+                <button id="modal-close-button"
+                    class="text-lg font-bold text-gray-400 bg-transparent cursor-pointer hover:text-indigo-800">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 fill font hover:fill-indigo-600"
+                        viewBox="0 0 640 640"><!--!Font Awesome Free v7.3.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2026 Fonticons, Inc.-->
+                        <path
+                            d="M183.1 137.4C170.6 124.9 150.3 124.9 137.8 137.4C125.3 149.9 125.3 170.2 137.8 182.7L275.2 320L137.9 457.4C125.4 469.9 125.4 490.2 137.9 502.7C150.4 515.2 170.7 515.2 183.2 502.7L320.5 365.3L457.9 502.6C470.4 515.1 490.7 515.1 503.2 502.6C515.7 490.1 515.7 469.8 503.2 457.3L365.8 320L503.1 182.6C515.6 170.1 515.6 149.8 503.1 137.3C490.6 124.8 470.3 124.8 457.8 137.3L320.5 274.7L183.1 137.4z" />
+                    </svg>
                 </button>
+            </div>
+            <div class="grid w-full grid-cols-2 mt-6 gap-x-10 gap-y-4">
+
+                <div class="flex flex-col w-full">
+                    <label class="text-xs" for="">Title <span class="text-red-600">*</span></label>
+                    <input
+                        class="p-2 text-xs border rounded-sm placeholder:text-gray-500 border-gray-950/30 focus:outline-indigo-600"
+                        type="text" placeholder="Enter Title">
+                </div>
+
+                <div class="flex flex-col w-full">
+                    <label class="text-xs" for="">Company <span class="text-red-600">*</span></label>
+                    <input
+                        class="p-2 text-xs border rounded-sm placeholder:text-gray-500 border-gray-950/30 focus:outline-indigo-600"
+                        type="text" placeholder="Enter Company">
+                </div>
+
+                <div class="flex flex-col w-full">
+                    <label class="text-xs" for="">Location <span class="text-red-600">*</span></label>
+                    <input
+                        class="p-2 text-xs border rounded-sm placeholder:text-gray-500 border-gray-950/30 focus:outline-indigo-600"
+                        type="text" placeholder="Enter Location">
+                </div>
+
+                <div class="flex flex-col w-full">
+                    <label class="text-xs" for="">Date Applied <span class="text-red-600">*</span></label>
+                    <input
+                        class="p-2 text-xs text-gray-500 border rounded-sm border-gray-950/30 focus:outline-indigo-600"
+                        type="date">
+                </div>
+
+                <div class="flex flex-col w-full">
+                    <label class="text-xs" for="">URL <span class="text-red-600">*</span></label>
+                    <input
+                        class="p-2 text-xs border rounded-sm placeholder:text-gray-500 border-gray-950/30 focus:outline-indigo-600"
+                        type="text" placeholder="Enter URL">
+                </div>
+
+                <div class="flex flex-col w-full">
+                    <label class="text-xs" for="">Date interviewed (optional)</label>
+                    <input
+                        class="p-2 text-xs text-gray-500 border rounded-sm border-gray-950/30 focus:outline-indigo-600"
+                        type="date">
+                </div>
+
+                <div class="flex flex-col w-full">
+                    <label class="text-xs" for="">Date Offered (optional)</label>
+                    <input
+                        class="p-2 text-xs text-gray-500 border rounded-sm border-gray-950/30 focus:outline-indigo-600"
+                        type="date">
+                </div>
+
+                <div class="flex flex-col w-full">
+                    <label class="text-xs" for="">Date Rejected (optional)</label>
+                    <input
+                        class="p-2 text-xs text-gray-500 border rounded-sm border-gray-950/30 focus:outline-indigo-600"
+                        type="date">
+                </div>
+
+                <div class="flex flex-col w-full">
+                    <label class="text-xs" for="">Job Status</label>
+                    <select
+                        class="p-2 text-xs text-gray-500 border rounded-sm border-gray-950/30 focus:outline-indigo-600"
+                        name="jobStatus" id="">
+                        <option value="applied">Applied</option>
+                        <option value="interviewed">Interviewed</option>
+                        <option value="offered">Offered</option>
+                        <option value="rejected">Rejected</option>
+                    </select>
+                </div>
+                <div id="star-rating" class="text-4xl text-yellow-500 col-span-full">
+                    <h4 class="text-xs text-black">
+                        How well do your skills align with the job requirments? <span class="text-red-600">*</span>
+                    </h4>
+                    <span data-rating="1" class="cursor-pointer star">&star;</span>
+                    <span data-rating="2" class="cursor-pointer star">&star;</span>
+                    <span data-rating="3" class="cursor-pointer star">&star;</span>
+                    <span data-rating="4" class="cursor-pointer star">&star;</span>
+                    <span data-rating="5" class="cursor-pointer star">&star;</span>
+                    <p id="message" class="text-[0.7rem] h-4 text-black"></p>
+                </div>
+                <div id="notes" class="flex flex-col w-full col-span-full">
+                    <label class="text-xs text-black" for="notes">Notes (optional)</label>
+                    <textarea
+                        class="p-2 text-xs text-gray-500 border rounded-sm min-h-40 border-gray-950/30 focus:outline-indigo-600"
+                        placeholder="Enter notes..." name="notes" id="notes"></textarea>
+                </div>
+
+                <div id="button-container" class="flex justify-between col-span-full">
+                    <button
+                        class="p-2 text-xs bg-white border rounded-lg cursor-pointer text-gray-950/30 border-grey-950/30 hover:bg-indigo-600 hover:text-white ">close</button>
+                    <button
+                        class="p-2 text-xs text-white bg-indigo-600 rounded-lg cursor-pointer hover:bg-indigo-800">Submit
+                        Applicaiton</button>
+                </div>
             </div>
         </div>
     </div>
-
-
-
-
-
     <script src="./dist/app.js"></script>
 </body>
 

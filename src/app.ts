@@ -38,7 +38,7 @@ const jobs: job[] = [
     company: "TechFin",
     location: "Birmingham, UK",
     appliedDate: Date.now(),
-    url: "www.indeed.com",
+    url: "https://www.google.com/",
     rating: 5,
     notes: "Good match of skills",
     status: JobStatus.offered,
@@ -259,6 +259,73 @@ function addJob(
   updateKanbanCounts();
 }
 
+function updateStarRating() {
+  const stars = document.querySelectorAll<HTMLDivElement>(".star");
+  let clickedRating = 0;
+
+  stars.forEach((star) => {
+    star.addEventListener("mouseenter", () => {
+      const starId = Number(star.dataset.rating);
+      if (clickedRating > 0) {
+        updateStarUI(0, "outline");
+      }
+      updateStarUI(starId, "full");
+    });
+
+    star.addEventListener("mouseleave", () => {
+      const starId = Number(star.dataset.rating);
+      updateStarUI(starId, "outline");
+      if (clickedRating) {
+        updateStarUI(clickedRating, "full");
+      }
+    });
+
+    star.addEventListener("click", () => {
+      const starId = Number(star.dataset.rating);
+      clickedRating = starId;
+      updateStarUI(starId, "full");
+    });
+  });
+}
+
+type starState = "full" | "outline";
+
+function updateStarUI(id: number, state: starState) {
+  const stars = document.querySelectorAll<HTMLDivElement>(".star");
+  const message = document.querySelector<HTMLSpanElement>(
+    "#star-rating #message",
+  )!;
+  let newStarState: "&star;" | "&starf;" = "&starf;";
+
+  const messages: string[] = [
+    "Minimal alignment with the required skills",
+    "Limited alignment with the required skills",
+    "A stretch, with several skills to develop",
+    "Strong alignment, with most skills covered",
+    "Full alignment with the required skills",
+  ];
+
+  if (state === "outline") {
+    newStarState = `&star;`;
+  }
+
+  stars.forEach((star) => {
+    const starId = Number(star.dataset.rating)!;
+    if (id === 0) {
+      star.innerHTML = "&star;";
+    } else if (starId <= id) {
+      star.innerHTML = newStarState;
+    }
+  });
+
+  if (state === "outline") {
+     message.innerHTML = "";
+  } else {
+    message.innerHTML = messages[id - 1];
+
+  }
+}
+
 const interviewed = document.getElementById("interviewed") as HTMLDivElement;
 const applied = document.getElementById("applied") as HTMLDivElement;
 const offered = document.getElementById("offered") as HTMLDivElement;
@@ -321,6 +388,7 @@ rejected.addEventListener("drop", (event: DragEvent) => {
 applicaitonButton.addEventListener("click", () => {
   modal.classList.add("flex");
   modal.classList.remove("hidden");
+  updateStarRating();
 });
 
 modalClose.addEventListener("click", () => {
