@@ -1,24 +1,6 @@
-interface job {
-  id: string;
-  title: string;
-  company: string;
-  location: string;
-  appliedDate: string;
-  interviewedDate?: string;
-  offerDate?: string;
-  rejectedDate?: string;
-  url: string;
-  rating: number;
-  notes?: string;
-  status: JobStatus;
-}
+import { type job, JobStatus } from "./types/job.js";
 
-const enum JobStatus {
-  applied = "applied",
-  interviewed = "interviewed",
-  offered = "offered",
-  rejected = "rejected",
-}
+// global variables
 
 const jobs: job[] = [
   {
@@ -44,6 +26,42 @@ const jobs: job[] = [
     status: JobStatus.offered,
   },
 ];
+
+let clickedRating = 0;
+let editExistingJobId: string | null = null;
+
+//Types
+type starState = "full" | "outline";
+
+// Global DOM references
+
+const interviewed = document.getElementById("interviewed") as HTMLDivElement;
+const applied = document.getElementById("applied") as HTMLDivElement;
+const offered = document.getElementById("offered") as HTMLDivElement;
+const rejected = document.getElementById("rejected") as HTMLDivElement;
+const applicaitonButton = document.getElementById(
+  "add-application-button",
+) as HTMLButtonElement;
+const modalClose = document.getElementById(
+  "modal-close-button",
+) as HTMLButtonElement;
+const modal = document.getElementById("modal-overlay") as HTMLDivElement;
+const closeButton = document.querySelector<HTMLButtonElement>("#modal-close");
+const applicationForm = document.querySelector<HTMLFormElement>("#application-form");
+const title = document.querySelector<HTMLInputElement>("#title")!;
+const company = document.querySelector<HTMLInputElement>("#company")!;
+const jobLocation = document.querySelector<HTMLInputElement>("#location")!;
+const dataApplied = document.querySelector<HTMLInputElement>("#data-applied")!;
+const url = document.querySelector<HTMLInputElement>("#url")!;
+const dateInterviewed = document.querySelector<HTMLInputElement>("#date-interviewed")!;
+const dateOffered = document.querySelector<HTMLInputElement>("#date-offered")!;
+const dataRejected = document.querySelector<HTMLInputElement>("#data-rejected")!;
+const jobStatus = document.querySelector<HTMLInputElement>("#job-status")!;
+const notes = document.querySelector<HTMLInputElement>("#notes")!;
+
+// Functions for Job array Logic
+
+// Rendering UI Functions
 
 function updateKanbanCounts() {
   const appliedCount = document.querySelector<HTMLSpanElement>(
@@ -219,25 +237,6 @@ function createJobCard(job: job, board: HTMLDivElement): void {
   board.append(card);
 }
 
-function handleEditApplication(job: job) {
-  openModal();
-
-  title.value = job.title;
-  company.value = job.company;
-  jobLocation.value = job.location;
-  dataApplied.value = job.appliedDate;
-  dateOffered.value = job.offerDate ?? "";
-  dateInterviewed.value = job.interviewedDate ?? "";
-  dataRejected.value = job.rejectedDate ?? "";
-  url.value = job.url;
-  jobStatus.value = job.status;
-  notes.value = job.notes ?? "";
-  clickedRating = job.rating;
-  updateStarUI(job.rating, "full");
-
-  editExistingJobId = job.id;
-}
-
 // fucntion to create SVG icons by passing the path and classes for styling
 function createIcon(classes: string[], pathString: string): SVGSVGElement {
   const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
@@ -255,64 +254,6 @@ function createIcon(classes: string[], pathString: string): SVGSVGElement {
 
   return svg;
 }
-
-function findBoard(jobStatus: JobStatus): HTMLDivElement {
-  if (jobStatus === JobStatus.applied) {
-    return applied;
-  } else if (jobStatus === JobStatus.interviewed) {
-    return interviewed;
-  } else if (jobStatus === JobStatus.offered) {
-    return offered;
-  } else {
-    return rejected;
-  }
-}
-
-function addJob(
-  event: DragEvent,
-  board: HTMLDivElement,
-  status: JobStatus,
-): void {
-  const id = event.dataTransfer?.getData("text/plain")!;
-  const job = document.getElementById(id) as HTMLDivElement;
-  board.firstElementChild!.after(job);
-
-  // update array
-  const currentJob = jobs.find((job) => job.id === id);
-  currentJob!.status = status;
-
-  updateKanbanCounts();
-}
-
-function updateStarRating() {
-  const stars = document.querySelectorAll<HTMLDivElement>(".star");
-
-  stars.forEach((star) => {
-    star.addEventListener("mouseenter", () => {
-      const starId = Number(star.dataset.rating);
-      if (clickedRating > 0) {
-        updateStarUI(0, "outline");
-      }
-      updateStarUI(starId, "full");
-    });
-
-    star.addEventListener("mouseleave", () => {
-      const starId = Number(star.dataset.rating);
-      updateStarUI(starId, "outline");
-      if (clickedRating) {
-        updateStarUI(clickedRating, "full");
-      }
-    });
-
-    star.addEventListener("click", () => {
-      const starId = Number(star.dataset.rating);
-      clickedRating = starId;
-      updateStarUI(starId, "full");
-    });
-  });
-}
-
-type starState = "full" | "outline";
 
 function updateStarUI(id: number, state: starState) {
   const stars = document.querySelectorAll<HTMLDivElement>(".star");
@@ -355,122 +296,26 @@ function drawKanbanJobCards() {
   });
 }
 
-const interviewed = document.getElementById("interviewed") as HTMLDivElement;
-const applied = document.getElementById("applied") as HTMLDivElement;
-const offered = document.getElementById("offered") as HTMLDivElement;
-const rejected = document.getElementById("rejected") as HTMLDivElement;
-const applicaitonButton = document.getElementById(
-  "add-application-button",
-) as HTMLButtonElement;
-const modalClose = document.getElementById(
-  "modal-close-button",
-) as HTMLButtonElement;
-const modal = document.getElementById("modal-overlay") as HTMLDivElement;
-const closeButton = document.querySelector<HTMLButtonElement>("#modal-close");
-const applicationForm =
-  document.querySelector<HTMLFormElement>("#application-form");
-let clickedRating = 0;
+// form/modal function
 
-const title = document.querySelector<HTMLInputElement>("#title")!;
-const company = document.querySelector<HTMLInputElement>("#company")!;
-const jobLocation = document.querySelector<HTMLInputElement>("#location")!;
-const dataApplied = document.querySelector<HTMLInputElement>("#data-applied")!;
-const url = document.querySelector<HTMLInputElement>("#url")!;
-const dateInterviewed =
-  document.querySelector<HTMLInputElement>("#date-interviewed")!;
-const dateOffered = document.querySelector<HTMLInputElement>("#date-offered")!;
-const dataRejected =
-  document.querySelector<HTMLInputElement>("#data-rejected")!;
-const jobStatus = document.querySelector<HTMLInputElement>("#job-status")!;
-const notes = document.querySelector<HTMLInputElement>("#notes")!;
+function handleEditApplication(job: job) {
+  openModal();
 
-let editExistingJobId: string | null = null;
+  title.value = job.title;
+  company.value = job.company;
+  jobLocation.value = job.location;
+  dataApplied.value = job.appliedDate;
+  dateOffered.value = job.offerDate ?? "";
+  dateInterviewed.value = job.interviewedDate ?? "";
+  dataRejected.value = job.rejectedDate ?? "";
+  url.value = job.url;
+  jobStatus.value = job.status;
+  notes.value = job.notes ?? "";
+  clickedRating = job.rating;
+  updateStarUI(job.rating, "full");
 
-drawKanbanJobCards();
-
-updateKanbanCounts();
-
-// document
-//   .querySelectorAll<HTMLDivElement>(".job")
-//   .forEach((job: HTMLDivElement): void => {
-//     job.addEventListener("dragstart", (event: DragEvent) => {
-//       event.dataTransfer?.setData("text/plain", job.id);
-//       console.log("Dragging has started");
-//     });
-//   });
-
-// uses bubbling for event propagation
-document
-  .querySelector<HTMLDivElement>("#kanban-board")!
-  .addEventListener("dragstart", (event: DragEvent) => {
-    const job = event.target as HTMLDivElement;
-    event.dataTransfer?.setData("text/plain", job.id);
-    console.log("Dragging has started");
-  });
-
-interviewed.addEventListener("dragover", (e) => {
-  e.preventDefault();
-});
-
-interviewed.addEventListener("drop", (event: DragEvent) => {
-  addJob(event, interviewed, JobStatus.interviewed);
-});
-
-applied.addEventListener("dragover", (e) => {
-  e.preventDefault();
-});
-
-applied.addEventListener("drop", (event: DragEvent) => {
-  addJob(event, applied, JobStatus.applied);
-});
-
-offered.addEventListener("dragover", (event: DragEvent) => {
-  event.preventDefault();
-});
-
-offered.addEventListener("drop", (event: DragEvent) => {
-  addJob(event, offered, JobStatus.offered);
-});
-
-rejected.addEventListener("dragover", (event: DragEvent) => {
-  event.preventDefault();
-});
-
-rejected.addEventListener("drop", (event: DragEvent) => {
-  addJob(event, rejected, JobStatus.rejected);
-});
-
-applicaitonButton.addEventListener("click", openModal);
-
-modalClose.addEventListener("click", CloseModal);
-
-closeButton?.addEventListener("click", CloseModal);
-
-function CloseModal(): void {
-  title.value = "";
-  company.value = "";
-  jobLocation.value = "";
-  dataApplied.value = "";
-  dateOffered.value = "";
-  dateInterviewed.value = "";
-  dataRejected.value = "";
-  url.value = "";
-  jobStatus.value = "";
-  notes.value = "";
-  clickedRating = 0;
-  updateStarUI(0, "outline");
-
-  modal.classList.add("hidden");
-  modal.classList.remove("flex");
+  editExistingJobId = job.id;
 }
-
-function openModal(): void {
-  modal.classList.add("flex");
-  modal.classList.remove("hidden");
-  updateStarRating();
-}
-
-applicationForm?.addEventListener("submit", handleApplicationSubmit);
 
 function handleApplicationSubmit(event: SubmitEvent) {
   event.preventDefault();
@@ -522,6 +367,147 @@ function handleApplicationSubmit(event: SubmitEvent) {
   }
 
   updateKanbanCounts();
-
   CloseModal();
 }
+
+function CloseModal(): void {
+  title.value = "";
+  company.value = "";
+  jobLocation.value = "";
+  dataApplied.value = "";
+  dateOffered.value = "";
+  dateInterviewed.value = "";
+  dataRejected.value = "";
+  url.value = "";
+  jobStatus.value = "";
+  notes.value = "";
+  clickedRating = 0;
+  updateStarUI(0, "outline");
+
+  modal.classList.add("hidden");
+  modal.classList.remove("flex");
+}
+
+function openModal(): void {
+  modal.classList.add("flex");
+  modal.classList.remove("hidden");
+  updateStarRating();
+}
+
+function addJob(
+  event: DragEvent,
+  board: HTMLDivElement,
+  status: JobStatus,
+): void {
+  const id = event.dataTransfer?.getData("text/plain")!;
+  const job = document.getElementById(id) as HTMLDivElement;
+  board.firstElementChild!.after(job);
+
+  // update array
+  const currentJob = jobs.find((job) => job.id === id);
+  currentJob!.status = status;
+
+  updateKanbanCounts();
+}
+function findBoard(jobStatus: JobStatus): HTMLDivElement {
+  if (jobStatus === JobStatus.applied) {
+    return applied;
+  } else if (jobStatus === JobStatus.interviewed) {
+    return interviewed;
+  } else if (jobStatus === JobStatus.offered) {
+    return offered;
+  } else {
+    return rejected;
+  }
+}
+
+function updateStarRating() {
+  const stars = document.querySelectorAll<HTMLDivElement>(".star");
+
+  stars.forEach((star) => {
+    star.addEventListener("mouseenter", () => {
+      const starId = Number(star.dataset.rating);
+      if (clickedRating > 0) {
+        updateStarUI(0, "outline");
+      }
+      updateStarUI(starId, "full");
+    });
+
+    star.addEventListener("mouseleave", () => {
+      const starId = Number(star.dataset.rating);
+      updateStarUI(starId, "outline");
+      if (clickedRating) {
+        updateStarUI(clickedRating, "full");
+      }
+    });
+
+    star.addEventListener("click", () => {
+      const starId = Number(star.dataset.rating);
+      clickedRating = starId;
+      updateStarUI(starId, "full");
+    });
+  });
+}
+
+// Drag and Drop Event Listners
+
+// document
+//   .querySelectorAll<HTMLDivElement>(".job")
+//   .forEach((job: HTMLDivElement): void => {
+//     job.addEventListener("dragstart", (event: DragEvent) => {
+//       event.dataTransfer?.setData("text/plain", job.id);
+//       console.log("Dragging has started");
+//     });
+//   });
+
+// uses bubbling for event propagation
+document
+  .querySelector<HTMLDivElement>("#kanban-board")!
+  .addEventListener("dragstart", (event: DragEvent) => {
+    const job = event.target as HTMLDivElement;
+    event.dataTransfer?.setData("text/plain", job.id);
+    console.log("Dragging has started");
+  });
+
+interviewed.addEventListener("dragover", (e) => {
+  e.preventDefault();
+});
+
+interviewed.addEventListener("drop", (event: DragEvent) => {
+  addJob(event, interviewed, JobStatus.interviewed);
+});
+
+applied.addEventListener("dragover", (e) => {
+  e.preventDefault();
+});
+
+applied.addEventListener("drop", (event: DragEvent) => {
+  addJob(event, applied, JobStatus.applied);
+});
+
+offered.addEventListener("dragover", (event: DragEvent) => {
+  event.preventDefault();
+});
+
+offered.addEventListener("drop", (event: DragEvent) => {
+  addJob(event, offered, JobStatus.offered);
+});
+
+rejected.addEventListener("dragover", (event: DragEvent) => {
+  event.preventDefault();
+});
+
+rejected.addEventListener("drop", (event: DragEvent) => {
+  addJob(event, rejected, JobStatus.rejected);
+});
+
+drawKanbanJobCards();
+
+updateKanbanCounts();
+
+// event Listners
+
+applicaitonButton.addEventListener("click", openModal);
+modalClose.addEventListener("click", CloseModal);
+closeButton?.addEventListener("click", CloseModal);
+applicationForm?.addEventListener("submit", handleApplicationSubmit);
