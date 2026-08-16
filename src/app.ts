@@ -1,24 +1,6 @@
-interface job {
-  id: string;
-  title: string;
-  company: string;
-  location: string;
-  appliedDate: string;
-  interviewedDate?: string;
-  offerDate?: string;
-  rejectedDate?: string;
-  url: string;
-  rating: number;
-  notes?: string;
-  status: JobStatus;
-}
+import { type job, JobStatus } from "./types/job.js";
 
-const enum JobStatus {
-  applied = "applied",
-  interviewed = "interviewed",
-  offered = "offered",
-  rejected = "rejected",
-}
+// global variables
 
 const jobs: job[] = [
   {
@@ -26,7 +8,7 @@ const jobs: job[] = [
     title: "Web Developer",
     company: "FinTech",
     location: "London, UK",
-    appliedDate: new Date().toLocaleDateString(),
+    appliedDate: "2026-08-16",
     url: "www.indeed.com",
     rating: 1,
     notes: "Good match of skills",
@@ -37,13 +19,49 @@ const jobs: job[] = [
     title: "Software Developer",
     company: "TechFin",
     location: "Birmingham, UK",
-    appliedDate: new Date().toLocaleDateString(),
+    appliedDate: "2026-08-16",
     url: "https://www.google.com/",
     rating: 5,
     notes: "Good match of skills",
     status: JobStatus.offered,
   },
 ];
+
+let clickedRating = 0;
+let editExistingJobId: string | null = null;
+
+//Types
+type starState = "full" | "outline";
+
+// Global DOM references
+
+const interviewed = document.getElementById("interviewed") as HTMLDivElement;
+const applied = document.getElementById("applied") as HTMLDivElement;
+const offered = document.getElementById("offered") as HTMLDivElement;
+const rejected = document.getElementById("rejected") as HTMLDivElement;
+const applicaitonButton = document.getElementById(
+  "add-application-button",
+) as HTMLButtonElement;
+const modalClose = document.getElementById(
+  "modal-close-button",
+) as HTMLButtonElement;
+const modal = document.getElementById("modal-overlay") as HTMLDivElement;
+const closeButton = document.querySelector<HTMLButtonElement>("#modal-close");
+const applicationForm = document.querySelector<HTMLFormElement>("#application-form");
+const title = document.querySelector<HTMLInputElement>("#title")!;
+const company = document.querySelector<HTMLInputElement>("#company")!;
+const jobLocation = document.querySelector<HTMLInputElement>("#location")!;
+const dataApplied = document.querySelector<HTMLInputElement>("#data-applied")!;
+const url = document.querySelector<HTMLInputElement>("#url")!;
+const dateInterviewed = document.querySelector<HTMLInputElement>("#date-interviewed")!;
+const dateOffered = document.querySelector<HTMLInputElement>("#date-offered")!;
+const dataRejected = document.querySelector<HTMLInputElement>("#data-rejected")!;
+const jobStatus = document.querySelector<HTMLInputElement>("#job-status")!;
+const notes = document.querySelector<HTMLInputElement>("#notes")!;
+
+// Functions for Job array Logic
+
+// Rendering UI Functions
 
 function updateKanbanCounts() {
   const appliedCount = document.querySelector<HTMLSpanElement>(
@@ -110,6 +128,11 @@ function createJobCard(job: job, board: HTMLDivElement): void {
     ["w-[1.1rem]", "min-w-[17.6px]", "ml-auto", "hover:fill-green-500"],
     "M100.4 417.2C104.5 402.6 112.2 389.3 123 378.5L304.2 197.3L338.1 163.4C354.7 180 389.4 214.7 442.1 267.4L476 301.3L442.1 335.2L260.9 516.4C250.2 527.1 236.8 534.9 222.2 539L94.4 574.6C86.1 576.9 77.1 574.6 71 568.4C64.9 562.2 62.6 553.3 64.9 545L100.4 417.2zM156 413.5C151.6 418.2 148.4 423.9 146.7 430.1L122.6 517L209.5 492.9C215.9 491.1 221.7 487.8 226.5 483.2L155.9 413.5zM510 267.4C493.4 250.8 458.7 216.1 406 163.4L372 129.5C398.5 103 413.4 88.1 416.9 84.6C430.4 71 448.8 63.4 468 63.4C487.2 63.4 505.6 71 519.1 84.6L554.8 120.3C568.4 133.9 576 152.3 576 171.4C576 190.5 568.4 209 554.8 222.5C551.3 226 536.4 240.9 509.9 267.4z",
   );
+
+  EditIcon.addEventListener("click", () => {
+    handleEditApplication(job);
+  });
+
   titleSection.append(EditIcon);
 
   // Company Section
@@ -232,64 +255,6 @@ function createIcon(classes: string[], pathString: string): SVGSVGElement {
   return svg;
 }
 
-function findBoard(jobStatus: JobStatus): HTMLDivElement {
-  if (jobStatus === JobStatus.applied) {
-    return applied;
-  } else if (jobStatus === JobStatus.interviewed) {
-    return interviewed;
-  } else if (jobStatus === JobStatus.offered) {
-    return offered;
-  } else {
-    return rejected;
-  }
-}
-
-function addJob(
-  event: DragEvent,
-  board: HTMLDivElement,
-  status: JobStatus,
-): void {
-  const id = event.dataTransfer?.getData("text/plain")!;
-  const job = document.getElementById(id) as HTMLDivElement;
-  board.firstElementChild!.after(job);
-
-  // update array
-  const currentJob = jobs.find((job) => job.id === id);
-  currentJob!.status = status;
-
-  updateKanbanCounts();
-}
-
-function updateStarRating() {
-  const stars = document.querySelectorAll<HTMLDivElement>(".star");
-
-  stars.forEach((star) => {
-    star.addEventListener("mouseenter", () => {
-      const starId = Number(star.dataset.rating);
-      if (clickedRating > 0) {
-        updateStarUI(0, "outline");
-      }
-      updateStarUI(starId, "full");
-    });
-
-    star.addEventListener("mouseleave", () => {
-      const starId = Number(star.dataset.rating);
-      updateStarUI(starId, "outline");
-      if (clickedRating) {
-        updateStarUI(clickedRating, "full");
-      }
-    });
-
-    star.addEventListener("click", () => {
-      const starId = Number(star.dataset.rating);
-      clickedRating = starId;
-      updateStarUI(starId, "full");
-    });
-  });
-}
-
-type starState = "full" | "outline";
-
 function updateStarUI(id: number, state: starState) {
   const stars = document.querySelectorAll<HTMLDivElement>(".star");
   const message = document.querySelector<HTMLSpanElement>(
@@ -331,25 +296,160 @@ function drawKanbanJobCards() {
   });
 }
 
-const interviewed = document.getElementById("interviewed") as HTMLDivElement;
-const applied = document.getElementById("applied") as HTMLDivElement;
-const offered = document.getElementById("offered") as HTMLDivElement;
-const rejected = document.getElementById("rejected") as HTMLDivElement;
-const applicaitonButton = document.getElementById(
-  "add-application-button",
-) as HTMLButtonElement;
-const modalClose = document.getElementById(
-  "modal-close-button",
-) as HTMLButtonElement;
-const modal = document.getElementById("modal-overlay") as HTMLDivElement;
-const closeButton = document.querySelector<HTMLButtonElement>("#modal-close");
-const applicationForm =
-  document.querySelector<HTMLFormElement>("#application-form");
-let clickedRating = 0;
+// form/modal function
 
-drawKanbanJobCards();
+function handleEditApplication(job: job) {
+  openModal();
 
-updateKanbanCounts();
+  title.value = job.title;
+  company.value = job.company;
+  jobLocation.value = job.location;
+  dataApplied.value = job.appliedDate;
+  dateOffered.value = job.offerDate ?? "";
+  dateInterviewed.value = job.interviewedDate ?? "";
+  dataRejected.value = job.rejectedDate ?? "";
+  url.value = job.url;
+  jobStatus.value = job.status;
+  notes.value = job.notes ?? "";
+  clickedRating = job.rating;
+  updateStarUI(job.rating, "full");
+
+  editExistingJobId = job.id;
+}
+
+function handleApplicationSubmit(event: SubmitEvent) {
+  event.preventDefault();
+
+  if (clickedRating === 0) {
+    return;
+  }
+
+  if (editExistingJobId === null) {
+    const newJob: job = {
+      id: crypto.randomUUID(),
+      title: title.value,
+      company: company.value,
+      location: jobLocation.value,
+      appliedDate: dataApplied.value,
+      offerDate: dateOffered.value,
+      interviewedDate: dateInterviewed.value,
+      rejectedDate: dataRejected.value,
+      url: url.value,
+      status: jobStatus.value as JobStatus,
+      notes: notes.value,
+      rating: clickedRating,
+    };
+
+    jobs.push(newJob);
+
+    createJobCard(newJob, findBoard(newJob.status));
+    console.log(newJob);
+  } else {
+    const currentJob = jobs.find((job) => job.id === editExistingJobId)!;
+    currentJob.title = title.value;
+    currentJob.company = company.value;
+    currentJob.location = jobLocation.value;
+    currentJob.appliedDate = dataApplied.value;
+    currentJob.offerDate = dateOffered.value;
+    currentJob.interviewedDate = dateInterviewed.value;
+    currentJob.rejectedDate = dataRejected.value;
+    currentJob.url = url.value;
+    currentJob.status = jobStatus.value as JobStatus;
+    currentJob.notes = notes.value;
+    currentJob.rating = clickedRating;
+
+    const oldCard = document.getElementById(editExistingJobId);
+    oldCard?.remove();
+
+    createJobCard(currentJob, findBoard(currentJob.status));
+
+    editExistingJobId = null;
+  }
+
+  updateKanbanCounts();
+  CloseModal();
+}
+
+function CloseModal(): void {
+  title.value = "";
+  company.value = "";
+  jobLocation.value = "";
+  dataApplied.value = "";
+  dateOffered.value = "";
+  dateInterviewed.value = "";
+  dataRejected.value = "";
+  url.value = "";
+  jobStatus.value = "";
+  notes.value = "";
+  clickedRating = 0;
+  updateStarUI(0, "outline");
+
+  modal.classList.add("hidden");
+  modal.classList.remove("flex");
+}
+
+function openModal(): void {
+  modal.classList.add("flex");
+  modal.classList.remove("hidden");
+  updateStarRating();
+}
+
+function addJob(
+  event: DragEvent,
+  board: HTMLDivElement,
+  status: JobStatus,
+): void {
+  const id = event.dataTransfer?.getData("text/plain")!;
+  const job = document.getElementById(id) as HTMLDivElement;
+  board.firstElementChild!.after(job);
+
+  // update array
+  const currentJob = jobs.find((job) => job.id === id);
+  currentJob!.status = status;
+
+  updateKanbanCounts();
+}
+function findBoard(jobStatus: JobStatus): HTMLDivElement {
+  if (jobStatus === JobStatus.applied) {
+    return applied;
+  } else if (jobStatus === JobStatus.interviewed) {
+    return interviewed;
+  } else if (jobStatus === JobStatus.offered) {
+    return offered;
+  } else {
+    return rejected;
+  }
+}
+
+function updateStarRating() {
+  const stars = document.querySelectorAll<HTMLDivElement>(".star");
+
+  stars.forEach((star) => {
+    star.addEventListener("mouseenter", () => {
+      const starId = Number(star.dataset.rating);
+      if (clickedRating > 0) {
+        updateStarUI(0, "outline");
+      }
+      updateStarUI(starId, "full");
+    });
+
+    star.addEventListener("mouseleave", () => {
+      const starId = Number(star.dataset.rating);
+      updateStarUI(starId, "outline");
+      if (clickedRating) {
+        updateStarUI(clickedRating, "full");
+      }
+    });
+
+    star.addEventListener("click", () => {
+      const starId = Number(star.dataset.rating);
+      clickedRating = starId;
+      updateStarUI(starId, "full");
+    });
+  });
+}
+
+// Drag and Drop Event Listners
 
 // document
 //   .querySelectorAll<HTMLDivElement>(".job")
@@ -360,7 +460,7 @@ updateKanbanCounts();
 //     });
 //   });
 
-// uses bubbling for event propagation 
+// uses bubbling for event propagation
 document
   .querySelector<HTMLDivElement>("#kanban-board")!
   .addEventListener("dragstart", (event: DragEvent) => {
@@ -401,78 +501,13 @@ rejected.addEventListener("drop", (event: DragEvent) => {
   addJob(event, rejected, JobStatus.rejected);
 });
 
-applicaitonButton.addEventListener("click", () => {
-  modal.classList.add("flex");
-  modal.classList.remove("hidden");
-  updateStarRating();
-});
+drawKanbanJobCards();
 
+updateKanbanCounts();
+
+// event Listners
+
+applicaitonButton.addEventListener("click", openModal);
 modalClose.addEventListener("click", CloseModal);
-
 closeButton?.addEventListener("click", CloseModal);
-
-function CloseModal(): void {
-  modal.classList.add("hidden");
-  modal.classList.remove("flex");
-}
-
 applicationForm?.addEventListener("submit", handleApplicationSubmit);
-
-function handleApplicationSubmit(event: SubmitEvent) {
-  event.preventDefault();
-
-  if (clickedRating === 0) {
-    return;
-  }
-
-  const title = document.querySelector<HTMLInputElement>("#title")!;
-  const company = document.querySelector<HTMLInputElement>("#company")!;
-  const location = document.querySelector<HTMLInputElement>("#location")!;
-  const dataApplied =
-    document.querySelector<HTMLInputElement>("#data-applied")!;
-  const url = document.querySelector<HTMLInputElement>("#url")!;
-  const dateInterviewed =
-    document.querySelector<HTMLInputElement>("#date-interviewed")!;
-  const dateOffered =
-    document.querySelector<HTMLInputElement>("#date-offered")!;
-  const dataRejected =
-    document.querySelector<HTMLInputElement>("#data-rejected")!;
-  const jobStatus = document.querySelector<HTMLInputElement>("#job-status")!;
-  const notes = document.querySelector<HTMLInputElement>("#notes")!;
-
-  const newJob: job = {
-    id: crypto.randomUUID(),
-    title: title.value,
-    company: company.value,
-    location: location.value,
-    appliedDate: dataApplied.value,
-    offerDate: dateOffered.value,
-    interviewedDate: dateInterviewed.value,
-    rejectedDate: dataRejected.value,
-    url: url.value,
-    status: jobStatus.value as JobStatus,
-    notes: notes.value,
-    rating: clickedRating,
-  };
-
-  jobs.push(newJob);
-  createJobCard(newJob, findBoard(newJob.status));
-  updateKanbanCounts();
-
-  title.value = "";
-  company.value = "";
-  location.value = "";
-  dataApplied.value = "";
-  dateOffered.value = "";
-  dateInterviewed.value = "";
-  dataRejected.value = "";
-  url.value = "";
-  jobStatus.value = "";
-  notes.value = "";
-  clickedRating = 0;
-  updateStarUI(0, "outline");
-
-  CloseModal();
-
-  console.log(newJob);
-}
