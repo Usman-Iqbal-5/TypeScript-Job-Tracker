@@ -5,7 +5,7 @@ const jobs = [
         title: "Web Developer",
         company: "FinTech",
         location: "London, UK",
-        appliedDate: new Date().toLocaleDateString(),
+        appliedDate: "2026-08-16",
         url: "www.indeed.com",
         rating: 1,
         notes: "Good match of skills",
@@ -16,7 +16,7 @@ const jobs = [
         title: "Software Developer",
         company: "TechFin",
         location: "Birmingham, UK",
-        appliedDate: new Date().toLocaleDateString(),
+        appliedDate: "2026-08-16",
         url: "https://www.google.com/",
         rating: 5,
         notes: "Good match of skills",
@@ -53,6 +53,9 @@ function createJobCard(job, board) {
     titleSection.append(title);
     //Title Section -  edit icon
     const EditIcon = createIcon(["w-[1.1rem]", "min-w-[17.6px]", "ml-auto", "hover:fill-green-500"], "M100.4 417.2C104.5 402.6 112.2 389.3 123 378.5L304.2 197.3L338.1 163.4C354.7 180 389.4 214.7 442.1 267.4L476 301.3L442.1 335.2L260.9 516.4C250.2 527.1 236.8 534.9 222.2 539L94.4 574.6C86.1 576.9 77.1 574.6 71 568.4C64.9 562.2 62.6 553.3 64.9 545L100.4 417.2zM156 413.5C151.6 418.2 148.4 423.9 146.7 430.1L122.6 517L209.5 492.9C215.9 491.1 221.7 487.8 226.5 483.2L155.9 413.5zM510 267.4C493.4 250.8 458.7 216.1 406 163.4L372 129.5C398.5 103 413.4 88.1 416.9 84.6C430.4 71 448.8 63.4 468 63.4C487.2 63.4 505.6 71 519.1 84.6L554.8 120.3C568.4 133.9 576 152.3 576 171.4C576 190.5 568.4 209 554.8 222.5C551.3 226 536.4 240.9 509.9 267.4z");
+    EditIcon.addEventListener("click", () => {
+        handleEditApplication(job);
+    });
     titleSection.append(EditIcon);
     // Company Section
     const companySection = document.createElement("div");
@@ -112,6 +115,23 @@ function createJobCard(job, board) {
     card.append(ratingSection);
     card.append(cardFooter);
     board.append(card);
+}
+function handleEditApplication(job) {
+    var _a, _b, _c, _d;
+    openModal();
+    title.value = job.title;
+    company.value = job.company;
+    jobLocation.value = job.location;
+    dataApplied.value = job.appliedDate;
+    dateOffered.value = (_a = job.offerDate) !== null && _a !== void 0 ? _a : "";
+    dateInterviewed.value = (_b = job.interviewedDate) !== null && _b !== void 0 ? _b : "";
+    dataRejected.value = (_c = job.rejectedDate) !== null && _c !== void 0 ? _c : "";
+    url.value = job.url;
+    jobStatus.value = job.status;
+    notes.value = (_d = job.notes) !== null && _d !== void 0 ? _d : "";
+    clickedRating = job.rating;
+    updateStarUI(job.rating, "full");
+    editExistingJobId = job.id;
 }
 // fucntion to create SVG icons by passing the path and classes for styling
 function createIcon(classes, pathString) {
@@ -218,6 +238,17 @@ const modal = document.getElementById("modal-overlay");
 const closeButton = document.querySelector("#modal-close");
 const applicationForm = document.querySelector("#application-form");
 let clickedRating = 0;
+const title = document.querySelector("#title");
+const company = document.querySelector("#company");
+const jobLocation = document.querySelector("#location");
+const dataApplied = document.querySelector("#data-applied");
+const url = document.querySelector("#url");
+const dateInterviewed = document.querySelector("#date-interviewed");
+const dateOffered = document.querySelector("#date-offered");
+const dataRejected = document.querySelector("#data-rejected");
+const jobStatus = document.querySelector("#job-status");
+const notes = document.querySelector("#notes");
+let editExistingJobId = null;
 drawKanbanJobCards();
 updateKanbanCounts();
 // document
@@ -228,7 +259,7 @@ updateKanbanCounts();
 //       console.log("Dragging has started");
 //     });
 //   });
-// uses bubbling for event propagation 
+// uses bubbling for event propagation
 document
     .querySelector("#kanban-board")
     .addEventListener("dragstart", (event) => {
@@ -261,53 +292,13 @@ rejected.addEventListener("dragover", (event) => {
 rejected.addEventListener("drop", (event) => {
     addJob(event, rejected, "rejected" /* JobStatus.rejected */);
 });
-applicaitonButton.addEventListener("click", () => {
-    modal.classList.add("flex");
-    modal.classList.remove("hidden");
-    updateStarRating();
-});
+applicaitonButton.addEventListener("click", openModal);
 modalClose.addEventListener("click", CloseModal);
 closeButton === null || closeButton === void 0 ? void 0 : closeButton.addEventListener("click", CloseModal);
 function CloseModal() {
-    modal.classList.add("hidden");
-    modal.classList.remove("flex");
-}
-applicationForm === null || applicationForm === void 0 ? void 0 : applicationForm.addEventListener("submit", handleApplicationSubmit);
-function handleApplicationSubmit(event) {
-    event.preventDefault();
-    if (clickedRating === 0) {
-        return;
-    }
-    const title = document.querySelector("#title");
-    const company = document.querySelector("#company");
-    const location = document.querySelector("#location");
-    const dataApplied = document.querySelector("#data-applied");
-    const url = document.querySelector("#url");
-    const dateInterviewed = document.querySelector("#date-interviewed");
-    const dateOffered = document.querySelector("#date-offered");
-    const dataRejected = document.querySelector("#data-rejected");
-    const jobStatus = document.querySelector("#job-status");
-    const notes = document.querySelector("#notes");
-    const newJob = {
-        id: crypto.randomUUID(),
-        title: title.value,
-        company: company.value,
-        location: location.value,
-        appliedDate: dataApplied.value,
-        offerDate: dateOffered.value,
-        interviewedDate: dateInterviewed.value,
-        rejectedDate: dataRejected.value,
-        url: url.value,
-        status: jobStatus.value,
-        notes: notes.value,
-        rating: clickedRating,
-    };
-    jobs.push(newJob);
-    createJobCard(newJob, findBoard(newJob.status));
-    updateKanbanCounts();
     title.value = "";
     company.value = "";
-    location.value = "";
+    jobLocation.value = "";
     dataApplied.value = "";
     dateOffered.value = "";
     dateInterviewed.value = "";
@@ -317,6 +308,57 @@ function handleApplicationSubmit(event) {
     notes.value = "";
     clickedRating = 0;
     updateStarUI(0, "outline");
+    modal.classList.add("hidden");
+    modal.classList.remove("flex");
+}
+function openModal() {
+    modal.classList.add("flex");
+    modal.classList.remove("hidden");
+    updateStarRating();
+}
+applicationForm === null || applicationForm === void 0 ? void 0 : applicationForm.addEventListener("submit", handleApplicationSubmit);
+function handleApplicationSubmit(event) {
+    event.preventDefault();
+    if (clickedRating === 0) {
+        return;
+    }
+    if (editExistingJobId === null) {
+        const newJob = {
+            id: crypto.randomUUID(),
+            title: title.value,
+            company: company.value,
+            location: jobLocation.value,
+            appliedDate: dataApplied.value,
+            offerDate: dateOffered.value,
+            interviewedDate: dateInterviewed.value,
+            rejectedDate: dataRejected.value,
+            url: url.value,
+            status: jobStatus.value,
+            notes: notes.value,
+            rating: clickedRating,
+        };
+        jobs.push(newJob);
+        createJobCard(newJob, findBoard(newJob.status));
+        console.log(newJob);
+    }
+    else {
+        const currentJob = jobs.find((job) => job.id === editExistingJobId);
+        currentJob.title = title.value;
+        currentJob.company = company.value;
+        currentJob.location = jobLocation.value;
+        currentJob.appliedDate = dataApplied.value;
+        currentJob.offerDate = dateOffered.value;
+        currentJob.interviewedDate = dateInterviewed.value;
+        currentJob.rejectedDate = dataRejected.value;
+        currentJob.url = url.value;
+        currentJob.status = jobStatus.value;
+        currentJob.notes = notes.value;
+        currentJob.rating = clickedRating;
+        const oldCard = document.getElementById(editExistingJobId);
+        oldCard === null || oldCard === void 0 ? void 0 : oldCard.remove();
+        createJobCard(currentJob, findBoard(currentJob.status));
+        editExistingJobId = null;
+    }
+    updateKanbanCounts();
     CloseModal();
-    console.log(newJob);
 }
