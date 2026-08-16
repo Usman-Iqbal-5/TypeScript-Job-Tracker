@@ -26,6 +26,7 @@ const jobs = [
 let clickedRating = 0;
 let editExistingJobId = null;
 // Global DOM references
+const kanbanBoard = document.getElementById("kanban-board");
 const interviewed = document.getElementById("interviewed");
 const applied = document.getElementById("applied");
 const offered = document.getElementById("offered");
@@ -45,6 +46,9 @@ const dateOffered = document.querySelector("#date-offered");
 const dataRejected = document.querySelector("#data-rejected");
 const jobStatus = document.querySelector("#job-status");
 const notes = document.querySelector("#notes");
+const jobSideCloseButton = document.querySelector("#job-side-close-button");
+const jobSideArea = document.querySelector("#job-side-area");
+const dashBoard = document.querySelector("#dashboard-area");
 // Functions for Job array Logic
 // Rendering UI Functions
 function updateKanbanCounts() {
@@ -125,6 +129,7 @@ function createJobCard(job, board) {
     const readmore = document.createElement("button");
     readmore.classList.add("text-[0.72rem]", "bg-transparent", "cursor-pointer", "underline", "hover:text-indigo-700");
     readmore.textContent = "read more";
+    readmore.addEventListener("click", openJobSide);
     cardFooter.append(readmore);
     // date
     const datestamp = document.createElement("span");
@@ -187,6 +192,18 @@ function drawKanbanJobCards() {
         createJobCard(job, findBoard(job.status));
     });
 }
+function closeJobSide() {
+    dashBoard === null || dashBoard === void 0 ? void 0 : dashBoard.classList.remove("grid-cols-[1fr_auto]");
+    jobSideArea === null || jobSideArea === void 0 ? void 0 : jobSideArea.classList.add("hidden");
+    kanbanBoard.classList.remove("w-11/12");
+    kanbanBoard.classList.add("w-10/12");
+}
+function openJobSide() {
+    dashBoard === null || dashBoard === void 0 ? void 0 : dashBoard.classList.add("grid-cols-[1fr_auto]");
+    jobSideArea === null || jobSideArea === void 0 ? void 0 : jobSideArea.classList.remove("hidden");
+    kanbanBoard.classList.remove("w-10/12");
+    kanbanBoard.classList.add("w-11/12");
+}
 // form/modal function
 function handleEditApplication(job) {
     var _a, _b, _c, _d;
@@ -248,9 +265,9 @@ function handleApplicationSubmit(event) {
         editExistingJobId = null;
     }
     updateKanbanCounts();
-    CloseModal();
+    closeModal();
 }
-function CloseModal() {
+function closeModal() {
     title.value = "";
     company.value = "";
     jobLocation.value = "";
@@ -365,7 +382,8 @@ drawKanbanJobCards();
 updateKanbanCounts();
 // event Listners
 applicaitonButton.addEventListener("click", openModal);
-modalClose.addEventListener("click", CloseModal);
-closeButton === null || closeButton === void 0 ? void 0 : closeButton.addEventListener("click", CloseModal);
+modalClose.addEventListener("click", closeModal);
+closeButton === null || closeButton === void 0 ? void 0 : closeButton.addEventListener("click", closeModal);
 applicationForm === null || applicationForm === void 0 ? void 0 : applicationForm.addEventListener("submit", handleApplicationSubmit);
+jobSideCloseButton.addEventListener("click", closeJobSide);
 export {};

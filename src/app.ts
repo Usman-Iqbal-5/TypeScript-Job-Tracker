@@ -34,7 +34,7 @@ let editExistingJobId: string | null = null;
 type starState = "full" | "outline";
 
 // Global DOM references
-
+const kanbanBoard = document.getElementById("kanban-board") as HTMLDivElement;
 const interviewed = document.getElementById("interviewed") as HTMLDivElement;
 const applied = document.getElementById("applied") as HTMLDivElement;
 const offered = document.getElementById("offered") as HTMLDivElement;
@@ -47,17 +47,26 @@ const modalClose = document.getElementById(
 ) as HTMLButtonElement;
 const modal = document.getElementById("modal-overlay") as HTMLDivElement;
 const closeButton = document.querySelector<HTMLButtonElement>("#modal-close");
-const applicationForm = document.querySelector<HTMLFormElement>("#application-form");
+const applicationForm =
+  document.querySelector<HTMLFormElement>("#application-form");
 const title = document.querySelector<HTMLInputElement>("#title")!;
 const company = document.querySelector<HTMLInputElement>("#company")!;
 const jobLocation = document.querySelector<HTMLInputElement>("#location")!;
 const dataApplied = document.querySelector<HTMLInputElement>("#data-applied")!;
 const url = document.querySelector<HTMLInputElement>("#url")!;
-const dateInterviewed = document.querySelector<HTMLInputElement>("#date-interviewed")!;
+const dateInterviewed =
+  document.querySelector<HTMLInputElement>("#date-interviewed")!;
 const dateOffered = document.querySelector<HTMLInputElement>("#date-offered")!;
-const dataRejected = document.querySelector<HTMLInputElement>("#data-rejected")!;
+const dataRejected =
+  document.querySelector<HTMLInputElement>("#data-rejected")!;
 const jobStatus = document.querySelector<HTMLInputElement>("#job-status")!;
 const notes = document.querySelector<HTMLInputElement>("#notes")!;
+
+const jobSideCloseButton = document.querySelector<HTMLButtonElement>(
+  "#job-side-close-button",
+)!;
+const jobSideArea = document.querySelector<HTMLElement>("#job-side-area");
+const dashBoard = document.querySelector<HTMLDivElement>("#dashboard-area");
 
 // Functions for Job array Logic
 
@@ -206,6 +215,7 @@ function createJobCard(job: job, board: HTMLDivElement): void {
     "hover:text-indigo-700",
   );
   readmore.textContent = "read more";
+  readmore.addEventListener("click", openJobSide);
 
   cardFooter.append(readmore);
 
@@ -296,6 +306,20 @@ function drawKanbanJobCards() {
   });
 }
 
+function closeJobSide() {
+  dashBoard?.classList.remove("grid-cols-[1fr_auto]");
+  jobSideArea?.classList.add("hidden");
+  kanbanBoard.classList.remove("w-11/12");
+  kanbanBoard.classList.add("w-10/12");
+}
+
+function openJobSide() {
+  dashBoard?.classList.add("grid-cols-[1fr_auto]");
+  jobSideArea?.classList.remove("hidden");
+  kanbanBoard.classList.remove("w-10/12");
+  kanbanBoard.classList.add("w-11/12");
+}
+
 // form/modal function
 
 function handleEditApplication(job: job) {
@@ -367,10 +391,10 @@ function handleApplicationSubmit(event: SubmitEvent) {
   }
 
   updateKanbanCounts();
-  CloseModal();
+  closeModal();
 }
 
-function CloseModal(): void {
+function closeModal(): void {
   title.value = "";
   company.value = "";
   jobLocation.value = "";
@@ -508,6 +532,7 @@ updateKanbanCounts();
 // event Listners
 
 applicaitonButton.addEventListener("click", openModal);
-modalClose.addEventListener("click", CloseModal);
-closeButton?.addEventListener("click", CloseModal);
+modalClose.addEventListener("click", closeModal);
+closeButton?.addEventListener("click", closeModal);
 applicationForm?.addEventListener("submit", handleApplicationSubmit);
+jobSideCloseButton.addEventListener("click", closeJobSide);
