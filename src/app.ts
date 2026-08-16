@@ -3,10 +3,10 @@ interface job {
   title: string;
   company: string;
   location: string;
-  appliedDate: number;
-  interviewedDate?: number;
-  offerDate?: number;
-  rejectedDate?: number;
+  appliedDate: string;
+  interviewedDate?: string;
+  offerDate?: string;
+  rejectedDate?: string;
   url: string;
   rating: number;
   notes?: string;
@@ -14,10 +14,10 @@ interface job {
 }
 
 const enum JobStatus {
-  applied,
-  interviewed,
-  offered,
-  rejected,
+  applied = "applied",
+  interviewed = "interviewed",
+  offered = "offered",
+  rejected = "rejected",
 }
 
 const jobs: job[] = [
@@ -26,7 +26,7 @@ const jobs: job[] = [
     title: "Web Developer",
     company: "FinTech",
     location: "London, UK",
-    appliedDate: Date.now(),
+    appliedDate: new Date().toLocaleDateString(),
     url: "www.indeed.com",
     rating: 1,
     notes: "Good match of skills",
@@ -37,7 +37,7 @@ const jobs: job[] = [
     title: "Software Developer",
     company: "TechFin",
     location: "Birmingham, UK",
-    appliedDate: Date.now(),
+    appliedDate: new Date().toLocaleDateString(),
     url: "https://www.google.com/",
     rating: 5,
     notes: "Good match of skills",
@@ -197,8 +197,9 @@ function createJobCard(job: job, board: HTMLDivElement): void {
     "font-extralight",
     "rounded-lg",
     "bg-gray-200",
+    "whitespace-nowrap",
   );
-  const date = new Date(job.appliedDate).toLocaleDateString("en-GB");
+  const date = job.appliedDate;
   datestamp.textContent = date;
 
   cardFooter.append(datestamp);
@@ -261,7 +262,6 @@ function addJob(
 
 function updateStarRating() {
   const stars = document.querySelectorAll<HTMLDivElement>(".star");
-  let clickedRating = 0;
 
   stars.forEach((star) => {
     star.addEventListener("mouseenter", () => {
@@ -319,11 +319,16 @@ function updateStarUI(id: number, state: starState) {
   });
 
   if (state === "outline") {
-     message.innerHTML = "";
+    message.innerHTML = "";
   } else {
     message.innerHTML = messages[id - 1];
-
   }
+}
+
+function drawKanbanJobCards() {
+  jobs.forEach((job) => {
+    createJobCard(job, findBoard(job.status));
+  });
 }
 
 const interviewed = document.getElementById("interviewed") as HTMLDivElement;
@@ -337,20 +342,31 @@ const modalClose = document.getElementById(
   "modal-close-button",
 ) as HTMLButtonElement;
 const modal = document.getElementById("modal-overlay") as HTMLDivElement;
+const closeButton = document.querySelector<HTMLButtonElement>("#modal-close");
+const applicationForm =
+  document.querySelector<HTMLFormElement>("#application-form");
+let clickedRating = 0;
 
-jobs.forEach((job) => {
-  createJobCard(job, findBoard(job.status));
-});
+drawKanbanJobCards();
 
 updateKanbanCounts();
 
+// document
+//   .querySelectorAll<HTMLDivElement>(".job")
+//   .forEach((job: HTMLDivElement): void => {
+//     job.addEventListener("dragstart", (event: DragEvent) => {
+//       event.dataTransfer?.setData("text/plain", job.id);
+//       console.log("Dragging has started");
+//     });
+//   });
+
+// uses bubbling for event propagation 
 document
-  .querySelectorAll<HTMLDivElement>(".job")
-  .forEach((job: HTMLDivElement): void => {
-    job.addEventListener("dragstart", (event: DragEvent) => {
-      event.dataTransfer?.setData("text/plain", job.id);
-      console.log("Dragging has started");
-    });
+  .querySelector<HTMLDivElement>("#kanban-board")!
+  .addEventListener("dragstart", (event: DragEvent) => {
+    const job = event.target as HTMLDivElement;
+    event.dataTransfer?.setData("text/plain", job.id);
+    console.log("Dragging has started");
   });
 
 interviewed.addEventListener("dragover", (e) => {
@@ -391,7 +407,72 @@ applicaitonButton.addEventListener("click", () => {
   updateStarRating();
 });
 
-modalClose.addEventListener("click", () => {
+modalClose.addEventListener("click", CloseModal);
+
+closeButton?.addEventListener("click", CloseModal);
+
+function CloseModal(): void {
   modal.classList.add("hidden");
   modal.classList.remove("flex");
-});
+}
+
+applicationForm?.addEventListener("submit", handleApplicationSubmit);
+
+function handleApplicationSubmit(event: SubmitEvent) {
+  event.preventDefault();
+
+  if (clickedRating === 0) {
+    return;
+  }
+
+  const title = document.querySelector<HTMLInputElement>("#title")!;
+  const company = document.querySelector<HTMLInputElement>("#company")!;
+  const location = document.querySelector<HTMLInputElement>("#location")!;
+  const dataApplied =
+    document.querySelector<HTMLInputElement>("#data-applied")!;
+  const url = document.querySelector<HTMLInputElement>("#url")!;
+  const dateInterviewed =
+    document.querySelector<HTMLInputElement>("#date-interviewed")!;
+  const dateOffered =
+    document.querySelector<HTMLInputElement>("#date-offered")!;
+  const dataRejected =
+    document.querySelector<HTMLInputElement>("#data-rejected")!;
+  const jobStatus = document.querySelector<HTMLInputElement>("#job-status")!;
+  const notes = document.querySelector<HTMLInputElement>("#notes")!;
+
+  const newJob: job = {
+    id: crypto.randomUUID(),
+    title: title.value,
+    company: company.value,
+    location: location.value,
+    appliedDate: dataApplied.value,
+    offerDate: dateOffered.value,
+    interviewedDate: dateInterviewed.value,
+    rejectedDate: dataRejected.value,
+    url: url.value,
+    status: jobStatus.value as JobStatus,
+    notes: notes.value,
+    rating: clickedRating,
+  };
+
+  jobs.push(newJob);
+  createJobCard(newJob, findBoard(newJob.status));
+  updateKanbanCounts();
+
+  title.value = "";
+  company.value = "";
+  location.value = "";
+  dataApplied.value = "";
+  dateOffered.value = "";
+  dateInterviewed.value = "";
+  dataRejected.value = "";
+  url.value = "";
+  jobStatus.value = "";
+  notes.value = "";
+  clickedRating = 0;
+  updateStarUI(0, "outline");
+
+  CloseModal();
+
+  console.log(newJob);
+}

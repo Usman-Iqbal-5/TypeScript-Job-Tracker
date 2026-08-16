@@ -32,7 +32,7 @@
         </button>
     </header>
     <main class="flex justify-center w-full">
-        <section id="Kanban-board" class="flex items-center min-w-fit w-10/12 gap-2 p-5 bg-[#F6F5F8] rounded-lg h-100">
+        <section id="kanban-board" class="flex items-center min-w-fit w-10/12 gap-2 p-5 bg-[#F6F5F8] rounded-lg h-100">
             <section id="applied-section"
                 class="flex-1 h-full border-t-4 rounded-lg shadow-[0_0_10px_rgba(0,0,0,0.15)] border-t-blue-500 bg-gray-100">
                 <div id="applied"
@@ -93,75 +93,76 @@
                     </svg>
                 </button>
             </div>
-            <div class="grid w-full grid-cols-2 mt-6 gap-x-10 gap-y-4">
+            <form id="application-form" class="grid w-full grid-cols-2 mt-6 gap-x-10 gap-y-4">
 
                 <div class="flex flex-col w-full">
                     <label class="text-xs" for="">Title <span class="text-red-600">*</span></label>
-                    <input
+                    <input id="title"
                         class="p-2 text-xs border rounded-sm placeholder:text-gray-500 border-gray-950/30 focus:outline-indigo-600"
-                        type="text" placeholder="Enter Title">
+                        type="text" placeholder="Enter Title" required>
                 </div>
 
                 <div class="flex flex-col w-full">
                     <label class="text-xs" for="">Company <span class="text-red-600">*</span></label>
-                    <input
+                    <input id="company"
                         class="p-2 text-xs border rounded-sm placeholder:text-gray-500 border-gray-950/30 focus:outline-indigo-600"
-                        type="text" placeholder="Enter Company">
+                        type="text" placeholder="Enter Company" required>
                 </div>
 
                 <div class="flex flex-col w-full">
                     <label class="text-xs" for="">Location <span class="text-red-600">*</span></label>
-                    <input
+                    <input id="location"
                         class="p-2 text-xs border rounded-sm placeholder:text-gray-500 border-gray-950/30 focus:outline-indigo-600"
-                        type="text" placeholder="Enter Location">
+                        type="text" placeholder="Enter Location" required>
                 </div>
 
                 <div class="flex flex-col w-full">
                     <label class="text-xs" for="">Date Applied <span class="text-red-600">*</span></label>
-                    <input
+                    <input id="data-applied"
                         class="p-2 text-xs text-gray-500 border rounded-sm border-gray-950/30 focus:outline-indigo-600"
-                        type="date">
+                        type="date" required>
                 </div>
 
                 <div class="flex flex-col w-full">
                     <label class="text-xs" for="">URL <span class="text-red-600">*</span></label>
-                    <input
+                    <input id="url"
                         class="p-2 text-xs border rounded-sm placeholder:text-gray-500 border-gray-950/30 focus:outline-indigo-600"
-                        type="text" placeholder="Enter URL">
+                        type="text" placeholder="Enter URL" required>
                 </div>
 
                 <div class="flex flex-col w-full">
                     <label class="text-xs" for="">Date interviewed (optional)</label>
-                    <input
+                    <input id="date-interviewed"
                         class="p-2 text-xs text-gray-500 border rounded-sm border-gray-950/30 focus:outline-indigo-600"
                         type="date">
                 </div>
 
                 <div class="flex flex-col w-full">
                     <label class="text-xs" for="">Date Offered (optional)</label>
-                    <input
+                    <input id="date-offered"
                         class="p-2 text-xs text-gray-500 border rounded-sm border-gray-950/30 focus:outline-indigo-600"
                         type="date">
                 </div>
 
                 <div class="flex flex-col w-full">
                     <label class="text-xs" for="">Date Rejected (optional)</label>
-                    <input
+                    <input id="data-rejected"
                         class="p-2 text-xs text-gray-500 border rounded-sm border-gray-950/30 focus:outline-indigo-600"
                         type="date">
                 </div>
 
                 <div class="flex flex-col w-full">
                     <label class="text-xs" for="">Job Status</label>
-                    <select
+                    <select id="job-status"
                         class="p-2 text-xs text-gray-500 border rounded-sm border-gray-950/30 focus:outline-indigo-600"
-                        name="jobStatus" id="">
+                        required>
                         <option value="applied">Applied</option>
                         <option value="interviewed">Interviewed</option>
                         <option value="offered">Offered</option>
                         <option value="rejected">Rejected</option>
                     </select>
                 </div>
+
                 <div id="star-rating" class="text-4xl text-yellow-500 col-span-full">
                     <h4 class="text-xs text-black">
                         How well do your skills align with the job requirments? <span class="text-red-600">*</span>
@@ -171,23 +172,25 @@
                     <span data-rating="3" class="cursor-pointer star">&star;</span>
                     <span data-rating="4" class="cursor-pointer star">&star;</span>
                     <span data-rating="5" class="cursor-pointer star">&star;</span>
-                    <p id="message" class="text-[0.7rem] h-4 text-black"></p>
+                    <p id="message" class="text-[0.7rem] h-4 text-gray-600"></p>
                 </div>
-                <div id="notes" class="flex flex-col w-full col-span-full">
+
+                <div class="flex flex-col w-full col-span-full">
                     <label class="text-xs text-black" for="notes">Notes (optional)</label>
                     <textarea
                         class="p-2 text-xs text-gray-500 border rounded-sm min-h-40 border-gray-950/30 focus:outline-indigo-600"
-                        placeholder="Enter notes..." name="notes" id="notes"></textarea>
+                        placeholder="Enter notes..." id="notes"></textarea>
                 </div>
 
                 <div id="button-container" class="flex justify-between col-span-full">
-                    <button
+                    <button type="button" id="modal-close"
                         class="p-2 text-xs bg-white border rounded-lg cursor-pointer text-gray-950/30 border-grey-950/30 hover:bg-indigo-600 hover:text-white ">close</button>
-                    <button
+                    <button type="submit" id="submit-application"
                         class="p-2 text-xs text-white bg-indigo-600 rounded-lg cursor-pointer hover:bg-indigo-800">Submit
-                        Applicaiton</button>
+                        Applicaiton
+                    </button>
                 </div>
-            </div>
+            </form>
         </div>
     </div>
     <script src="./dist/app.js"></script>
