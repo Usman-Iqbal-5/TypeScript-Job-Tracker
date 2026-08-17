@@ -51,6 +51,7 @@ const notes = document.querySelector("#notes");
 const submitFormButton = document.querySelector("#submit-application");
 const jobSideCloseButton = document.querySelector("#job-side-close-button");
 const jobSideArea = document.querySelector("#job-side-area");
+const timeLineSection = document.querySelector("#timeline-section");
 const dashBoard = document.querySelector("#dashboard-area");
 // Functions for Job array Logic
 // Rendering UI Functions
@@ -150,7 +151,9 @@ function createJobCard(job, board) {
     const readmore = document.createElement("button");
     readmore.classList.add("text-[0.72rem]", "bg-transparent", "cursor-pointer", "underline", "hover:text-indigo-700");
     readmore.textContent = "more...";
-    readmore.addEventListener("click", openJobSide);
+    readmore.addEventListener("click", () => {
+        openJobSide(job);
+    });
     cardFooter.append(readmore);
     // date
     const datestamp = document.createElement("span");
@@ -165,6 +168,70 @@ function createJobCard(job, board) {
     card.append(ratingSection);
     card.append(cardFooter);
     board.append(card);
+}
+function createTimeline(job) {
+    const timeline = document.createElement("div");
+    timeline.classList.add("relative", "text-xs", "text-white");
+    timeline.setAttribute("id", "timeline");
+    const line = document.createElement("div");
+    line.classList.add("absolute", "left-2", "top-2", "h-[calc(100%-1rem)]", "w-px", "bg-gray-300");
+    timeline.append(line);
+    function createStage(labelText, dateText, completed, rejected = false) {
+        const stage = document.createElement("div");
+        stage.classList.add("flex", "gap-4", "mt-8");
+        const dot = document.createElement("div");
+        dot.classList.add("z-10", "rounded-full", "size-4", "shrink-0");
+        if (rejected) {
+            dot.classList.add("bg-red-500");
+        }
+        else if (completed) {
+            dot.classList.add("bg-indigo-600");
+        }
+        else {
+            dot.classList.add("bg-white", "border-2", "border-gray-300");
+        }
+        const content = document.createElement("div");
+        content.classList.add("flex", "justify-between", "flex-1");
+        const label = document.createElement("p");
+        label.textContent = labelText;
+        const date = document.createElement("p");
+        date.textContent = dateText;
+        if (!completed) {
+            label.classList.add("text-gray-400");
+            date.classList.add("text-gray-400");
+        }
+        else {
+            date.classList.add("text-gray-500");
+        }
+        if (rejected) {
+            label.classList.add("text-red-400");
+        }
+        content.append(label, date);
+        stage.append(dot, content);
+        return stage;
+    }
+    // Applied — always exists
+    const applied = createStage("Applied", job.appliedDate, true);
+    // Applied shouldn't have mt-8
+    applied.classList.remove("mt-8");
+    timeline.append(applied);
+    // Interview
+    if (job.interviewedDate) {
+        timeline.append(createStage("Interview", job.interviewedDate, true));
+    }
+    // Offer
+    if (job.offerDate) {
+        timeline.append(createStage("Offer", job.offerDate, true));
+    }
+    // Rejected
+    else if (job.rejectedDate) {
+        timeline.append(createStage("Rejected", job.rejectedDate, true, true));
+    }
+    // Still waiting for outcome
+    else {
+        timeline.append(createStage("Offer", "—", false));
+    }
+    return timeline;
 }
 // fucntion to create SVG icons by passing the path and classes for styling
 function createIcon(classes, pathString) {
@@ -214,16 +281,26 @@ function drawKanbanJobCards() {
     });
 }
 function closeJobSide() {
+    var _a;
     dashBoard === null || dashBoard === void 0 ? void 0 : dashBoard.classList.remove("grid-cols-[1fr_auto]");
     jobSideArea === null || jobSideArea === void 0 ? void 0 : jobSideArea.classList.add("hidden");
     kanbanBoard.classList.remove("w-11/12");
     kanbanBoard.classList.add("w-10/12");
+    (_a = document.querySelector("#timeline")) === null || _a === void 0 ? void 0 : _a.remove();
 }
-function openJobSide() {
+function openJobSide(job) {
     dashBoard === null || dashBoard === void 0 ? void 0 : dashBoard.classList.add("grid-cols-[1fr_auto]");
     jobSideArea === null || jobSideArea === void 0 ? void 0 : jobSideArea.classList.remove("hidden");
     kanbanBoard.classList.remove("w-10/12");
     kanbanBoard.classList.add("w-11/12");
+    createTimeLine(job);
+}
+function createTimeLine(job) {
+    const timeLine = document.querySelector("#timeline");
+    if (timeLine) {
+        timeLine.remove();
+    }
+    timeLineSection === null || timeLineSection === void 0 ? void 0 : timeLineSection.append(createTimeline(job));
 }
 // form/modal function
 function handleEditApplication(job) {
