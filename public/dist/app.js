@@ -36,6 +36,8 @@ const modalClose = document.getElementById("modal-close-button");
 const modal = document.getElementById("modal-overlay");
 const closeButton = document.querySelector("#modal-close");
 const applicationForm = document.querySelector("#application-form");
+const headerTitle = document.querySelector("#modal-header h3");
+const headerText = document.querySelector("#modal-header p");
 const title = document.querySelector("#title");
 const company = document.querySelector("#company");
 const jobLocation = document.querySelector("#location");
@@ -46,6 +48,7 @@ const dateOffered = document.querySelector("#date-offered");
 const dataRejected = document.querySelector("#data-rejected");
 const jobStatus = document.querySelector("#job-status");
 const notes = document.querySelector("#notes");
+const submitFormButton = document.querySelector("#submit-application");
 const jobSideCloseButton = document.querySelector("#job-side-close-button");
 const jobSideArea = document.querySelector("#job-side-area");
 const dashBoard = document.querySelector("#dashboard-area");
@@ -70,7 +73,7 @@ function createJobCard(job, board) {
     const card = document.createElement("div");
     card.id = job.id;
     card.draggable = true;
-    card.classList.add("w-full", "p-2", "pl-5", "pr-3", "rounded-lg", "shadow-[0_0_10px_rgba(0,0,0,0.15)]", "cursor-pointer", "job");
+    card.classList.add("w-full", "p-2", "pl-5", "pr-3", "rounded-lg", "shadow-[0_0_10px_rgba(0,0,0,0.15)]", "cursor-pointer", "hover:bg-slate-500/5", "job");
     // Title Section - title and edit section
     const titleSection = document.createElement("div");
     titleSection.classList.add("flex", "item-center", "gap-10");
@@ -83,6 +86,9 @@ function createJobCard(job, board) {
     const EditIcon = createIcon(["w-[1.1rem]", "min-w-[17.6px]", "ml-auto", "hover:fill-green-500"], "M100.4 417.2C104.5 402.6 112.2 389.3 123 378.5L304.2 197.3L338.1 163.4C354.7 180 389.4 214.7 442.1 267.4L476 301.3L442.1 335.2L260.9 516.4C250.2 527.1 236.8 534.9 222.2 539L94.4 574.6C86.1 576.9 77.1 574.6 71 568.4C64.9 562.2 62.6 553.3 64.9 545L100.4 417.2zM156 413.5C151.6 418.2 148.4 423.9 146.7 430.1L122.6 517L209.5 492.9C215.9 491.1 221.7 487.8 226.5 483.2L155.9 413.5zM510 267.4C493.4 250.8 458.7 216.1 406 163.4L372 129.5C398.5 103 413.4 88.1 416.9 84.6C430.4 71 448.8 63.4 468 63.4C487.2 63.4 505.6 71 519.1 84.6L554.8 120.3C568.4 133.9 576 152.3 576 171.4C576 190.5 568.4 209 554.8 222.5C551.3 226 536.4 240.9 509.9 267.4z");
     EditIcon.addEventListener("click", () => {
         handleEditApplication(job);
+        headerTitle.textContent = "Edit application";
+        headerText.textContent = "Update the details of the job application";
+        submitFormButton.textContent = "Update Appication";
     });
     titleSection.append(EditIcon);
     // Company Section
@@ -108,12 +114,27 @@ function createJobCard(job, board) {
     // Rating seciton
     const ratingSection = document.createElement("div");
     ratingSection.id = "rating-section";
-    ratingSection.classList.add("flex", "items-center", "gap-2");
-    const ratingIcon = createIcon(["w-5", "fill-yellow-400"], "M341.5 45.1C337.4 37.1 329.1 32 320.1 32C311.1 32 302.8 37.1 298.7 45.1L225.1 189.3L65.2 214.7C56.3 216.1 48.9 222.4 46.1 231C43.3 239.6 45.6 249 51.9 255.4L166.3 369.9L141.1 529.8C139.7 538.7 143.4 547.7 150.7 553C158 558.3 167.6 559.1 175.7 555L320.1 481.6L464.4 555C472.4 559.1 482.1 558.3 489.4 553C496.7 547.7 500.4 538.8 499 529.8L473.7 369.9L588.1 255.4C594.5 249 596.7 239.6 593.9 231C591.1 222.4 583.8 216.1 574.8 214.7L415 189.3L341.5 45.1z");
-    ratingSection.append(ratingIcon);
+    ratingSection.classList.add("flex", "items-center");
+    job.rating;
+    for (let i = 1; i <= 5; i++) {
+        const spanEl = document.createElement("span");
+        if (i <= job.rating) {
+            spanEl.innerHTML = "&starf;";
+        }
+        else {
+            spanEl.innerHTML = "&star;";
+        }
+        spanEl.classList.add("text-amber-500", "text-lg");
+        ratingSection.append(spanEl);
+    }
+    //   const ratingIcon = createIcon(
+    //     ["w-5", "fill-amber-600"],
+    //     "M341.5 45.1C337.4 37.1 329.1 32 320.1 32C311.1 32 302.8 37.1 298.7 45.1L225.1 189.3L65.2 214.7C56.3 216.1 48.9 222.4 46.1 231C43.3 239.6 45.6 249 51.9 255.4L166.3 369.9L141.1 529.8C139.7 538.7 143.4 547.7 150.7 553C158 558.3 167.6 559.1 175.7 555L320.1 481.6L464.4 555C472.4 559.1 482.1 558.3 489.4 553C496.7 547.7 500.4 538.8 499 529.8L473.7 369.9L588.1 255.4C594.5 249 596.7 239.6 593.9 231C591.1 222.4 583.8 216.1 574.8 214.7L415 189.3L341.5 45.1z",
+    //   );
+    //   ratingSection.append(ratingIcon);
     const ratingTitle = document.createElement("p");
     ratingTitle.textContent = `${job.rating} ${job.rating === 1 ? "star" : "stars"}`;
-    ratingTitle.classList.add("text-xs", "font-light");
+    ratingTitle.classList.add("text-xs", "font-light", "ml-2");
     ratingSection.append(ratingTitle);
     // card footer
     const cardFooter = document.createElement("div");
@@ -128,7 +149,7 @@ function createJobCard(job, board) {
     // read more button
     const readmore = document.createElement("button");
     readmore.classList.add("text-[0.72rem]", "bg-transparent", "cursor-pointer", "underline", "hover:text-indigo-700");
-    readmore.textContent = "read more";
+    readmore.textContent = "more...";
     readmore.addEventListener("click", openJobSide);
     cardFooter.append(readmore);
     // date
@@ -287,6 +308,9 @@ function openModal() {
     modal.classList.add("flex");
     modal.classList.remove("hidden");
     updateStarRating();
+    headerTitle.textContent = "Add new application";
+    headerText.textContent = "Fill in the details of the job application";
+    submitFormButton.textContent = "Submit Application";
 }
 function addJob(event, board, status) {
     var _a;

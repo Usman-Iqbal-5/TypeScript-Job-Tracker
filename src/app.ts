@@ -49,6 +49,9 @@ const modal = document.getElementById("modal-overlay") as HTMLDivElement;
 const closeButton = document.querySelector<HTMLButtonElement>("#modal-close");
 const applicationForm =
   document.querySelector<HTMLFormElement>("#application-form");
+const headerTitle =
+  document.querySelector<HTMLInputElement>("#modal-header h3")!;
+const headerText = document.querySelector<HTMLInputElement>("#modal-header p")!;
 const title = document.querySelector<HTMLInputElement>("#title")!;
 const company = document.querySelector<HTMLInputElement>("#company")!;
 const jobLocation = document.querySelector<HTMLInputElement>("#location")!;
@@ -61,6 +64,9 @@ const dataRejected =
   document.querySelector<HTMLInputElement>("#data-rejected")!;
 const jobStatus = document.querySelector<HTMLInputElement>("#job-status")!;
 const notes = document.querySelector<HTMLInputElement>("#notes")!;
+const submitFormButton = document.querySelector<HTMLButtonElement>(
+  "#submit-application",
+)!;
 
 const jobSideCloseButton = document.querySelector<HTMLButtonElement>(
   "#job-side-close-button",
@@ -119,6 +125,7 @@ function createJobCard(job: job, board: HTMLDivElement): void {
     "rounded-lg",
     "shadow-[0_0_10px_rgba(0,0,0,0.15)]",
     "cursor-pointer",
+    "hover:bg-slate-500/5",
     "job",
   );
 
@@ -140,6 +147,10 @@ function createJobCard(job: job, board: HTMLDivElement): void {
 
   EditIcon.addEventListener("click", () => {
     handleEditApplication(job);
+
+    headerTitle.textContent = "Edit application";
+    headerText.textContent = "Update the details of the job application";
+    submitFormButton.textContent = "Update Appication";
   });
 
   titleSection.append(EditIcon);
@@ -177,16 +188,29 @@ function createJobCard(job: job, board: HTMLDivElement): void {
   // Rating seciton
   const ratingSection = document.createElement("div");
   ratingSection.id = "rating-section";
-  ratingSection.classList.add("flex", "items-center", "gap-2");
-  const ratingIcon = createIcon(
-    ["w-5", "fill-yellow-400"],
-    "M341.5 45.1C337.4 37.1 329.1 32 320.1 32C311.1 32 302.8 37.1 298.7 45.1L225.1 189.3L65.2 214.7C56.3 216.1 48.9 222.4 46.1 231C43.3 239.6 45.6 249 51.9 255.4L166.3 369.9L141.1 529.8C139.7 538.7 143.4 547.7 150.7 553C158 558.3 167.6 559.1 175.7 555L320.1 481.6L464.4 555C472.4 559.1 482.1 558.3 489.4 553C496.7 547.7 500.4 538.8 499 529.8L473.7 369.9L588.1 255.4C594.5 249 596.7 239.6 593.9 231C591.1 222.4 583.8 216.1 574.8 214.7L415 189.3L341.5 45.1z",
-  );
-  ratingSection.append(ratingIcon);
+  ratingSection.classList.add("flex", "items-center");
+  job.rating;
+
+  for (let i = 1; i <= 5; i++) {
+    const spanEl = document.createElement("span");
+    if (i <= job.rating) {
+      spanEl.innerHTML = "&starf;";
+    } else {
+      spanEl.innerHTML = "&star;";
+    }
+    spanEl.classList.add("text-amber-500", "text-lg");
+    ratingSection.append(spanEl);
+  }
+
+  //   const ratingIcon = createIcon(
+  //     ["w-5", "fill-amber-600"],
+  //     "M341.5 45.1C337.4 37.1 329.1 32 320.1 32C311.1 32 302.8 37.1 298.7 45.1L225.1 189.3L65.2 214.7C56.3 216.1 48.9 222.4 46.1 231C43.3 239.6 45.6 249 51.9 255.4L166.3 369.9L141.1 529.8C139.7 538.7 143.4 547.7 150.7 553C158 558.3 167.6 559.1 175.7 555L320.1 481.6L464.4 555C472.4 559.1 482.1 558.3 489.4 553C496.7 547.7 500.4 538.8 499 529.8L473.7 369.9L588.1 255.4C594.5 249 596.7 239.6 593.9 231C591.1 222.4 583.8 216.1 574.8 214.7L415 189.3L341.5 45.1z",
+  //   );
+  //   ratingSection.append(ratingIcon);
 
   const ratingTitle = document.createElement("p");
   ratingTitle.textContent = `${job.rating} ${job.rating === 1 ? "star" : "stars"}`;
-  ratingTitle.classList.add("text-xs", "font-light");
+  ratingTitle.classList.add("text-xs", "font-light", "ml-2");
   ratingSection.append(ratingTitle);
 
   // card footer
@@ -214,7 +238,7 @@ function createJobCard(job: job, board: HTMLDivElement): void {
     "underline",
     "hover:text-indigo-700",
   );
-  readmore.textContent = "read more";
+  readmore.textContent = "more...";
   readmore.addEventListener("click", openJobSide);
 
   cardFooter.append(readmore);
@@ -416,6 +440,10 @@ function openModal(): void {
   modal.classList.add("flex");
   modal.classList.remove("hidden");
   updateStarRating();
+
+  headerTitle.textContent = "Add new application";
+  headerText.textContent = "Fill in the details of the job application";
+  submitFormButton.textContent = "Submit Application";
 }
 
 function addJob(
