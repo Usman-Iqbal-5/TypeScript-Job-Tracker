@@ -1,12 +1,12 @@
 # Dependencies
 node_modules/
 
+# Production build
+dist/
+
 # Environment variables
 .env
 .env.*
-
-# generated CSS
-/public/styles/output.css
 
 # Logs
 npm-debug.log*
