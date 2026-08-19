@@ -1,63 +1,166 @@
 import Chart from "chart.js/auto";
-
 import jobs from "./shared_state";
-import { JobStatus } from "./types/job";
+import getJobStats from "./utils/jobStats";
 
+// STATUS BAR CHART
 
-const statusCanvas = document.querySelector<HTMLCanvasElement>("#status-chart")!;
+const statusCanvas =
+  document.querySelector<HTMLCanvasElement>("#status-chart")!;
 
-const appliedCount =
-    jobs.filter(job => job.status === JobStatus.applied).length;
+const statusLabels = ["Applied", "Interviewed", "Offered", "Rejected"];
 
-const interviewedCount =
-    jobs.filter(job => job.status === JobStatus.interviewed).length;
+function getStatusCounts(): number[] {
+  const stats = getJobStats(jobs);
 
-const offeredCount =
-    jobs.filter(job => job.status === JobStatus.offered).length;
+  return [
+    stats.appliedNum,
+    stats.interviewedNum,
+    stats.offeredNum,
+    stats.rejectedNum,
+  ];
+}
 
-const rejectedCount =
-    jobs.filter(job => job.status === JobStatus.rejected).length;
+const statusChart = new Chart(statusCanvas, {
+  type: "bar",
 
-    const labels = [
-    "Applied",
-    "Interviewed",
-    "Offered",
-    "Rejected"
-];
+  data: {
+    labels: statusLabels,
 
-const values = [
-    appliedCount,
-    interviewedCount,
-    offeredCount,
-    rejectedCount
-];
+    datasets: [
+      {
+        data: getStatusCounts(),
 
-new Chart(statusCanvas, {
-    type: "bar",
+        backgroundColor: ["#6366f1", "#f59e0b", "#10b981", "#ef4444"],
+      },
+    ],
+  },
 
-    data: {
-        labels: labels,
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
 
-        datasets: [
-            {
-                label: "Jobs",
-                data: values,
-
-                backgroundColor: [
-                    "#6366f1",
-                    "#f59e0b",
-                    "#10b981",
-                    "#ef4444"
-                ]
-            }
-        ]
+    plugins: {
+      legend: {
+        display: false,
+      },
     },
 
-    options: {
-        scales: {
-            y: {
-                beginAtZero: true
-            }
-        }
-    }
+    scales: {
+      y: {
+        beginAtZero: true,
+
+        title: {
+          display: true,
+          text: "Number of Jobs",
+        },
+
+        ticks: {
+          precision: 0,
+        },
+      },
+    },
+  },
 });
+
+export function updateStatusChart(): void {
+  statusChart.data.datasets[0].data = getStatusCounts();
+
+  statusChart.update();
+}
+
+// APPLICATIONS OVER TIME LINE CHART
+
+const applicationsCanvas = document.querySelector<HTMLCanvasElement>(
+  "#applications-chart",
+)!;
+
+function getApplicationsOverTime(): {
+  labels: string[];
+  values: number[];
+} {
+  const applicationsByDate: Record<string, number> = {};
+
+  jobs.forEach((job) => {
+    applicationsByDate[job.appliedDate] =
+      (applicationsByDate[job.appliedDate] || 0) + 1;
+  });
+
+  const sortedDates = Object.keys(applicationsByDate).sort();
+
+  const values = sortedDates.map((date) => applicationsByDate[date]);
+
+  return {
+    labels: sortedDates,
+    values: values,
+  };
+}
+
+const applicationData = getApplicationsOverTime();
+
+const applicationsChart = new Chart(applicationsCanvas, {
+  type: "line",
+
+  data: {
+    labels: applicationData.labels,
+
+    datasets: [
+      {
+        data: applicationData.values,
+
+        borderColor: "#6366f1",
+        backgroundColor: "#6366f1",
+
+        tension: 0.3,
+      },
+    ],
+  },
+
+  options: {
+    plugins: {
+      legend: {
+        display: false,
+      },
+    },
+
+    scales: {
+      y: {
+        beginAtZero: true,
+
+        title: {
+          display: true,
+          text: "Number of Jobs",
+        },
+
+        ticks: {
+          precision: 0,
+        },
+      },
+
+      x: {
+        title: {
+          display: true,
+          text: "Date",
+        },
+        ticks: {
+          minRotation: 0,
+          maxRotation: 0,
+        },
+      },
+    },
+  },
+});
+
+export function updateApplicationChart(): void {
+  const applicationData = getApplicationsOverTime();
+
+  applicationsChart.data.labels = applicationData.labels;
+
+  applicationsChart.data.datasets[0].data = applicationData.values;
+
+  applicationsChart.update();
+}
+
+export function updateDashboardCharts(): void {
+  updateStatusChart();
+  updateApplicationChart();
+}

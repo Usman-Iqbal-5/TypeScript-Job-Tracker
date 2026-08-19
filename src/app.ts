@@ -1,8 +1,10 @@
 import "../CSS/input.css";
+import "./dashboard";
 
 import { type job, JobStatus } from "./types/job";
 import jobs from "./shared_state";
-import "./dashboard";
+import { updateDashboardCharts } from "./dashboard";
+import getJobStats from "./utils/jobStats";
 
 // Application state
 let clickedRating = 0;
@@ -46,7 +48,39 @@ const notes = document.querySelector<HTMLInputElement>("#notes")!;
 const submitFormButton = document.querySelector<HTMLButtonElement>(
   "#submit-application",
 )!;
-const dashBoard = document.querySelector<HTMLDivElement>("#dashboard-area");
+
+
+const dashboard = document.getElementById("dashboard") as HTMLDivElement;
+// Dashboard stats
+const dashboardTotalNum = document.querySelector<HTMLDivElement>(
+  "#dashboard__total h2",
+)!;
+const dashboardAppliedlNum = document.querySelector<HTMLHeadingElement>(
+  "#dashboard__applied h2",
+)!;
+const dashboardAppliedPercentage = document.querySelector<HTMLSpanElement>(
+  "#dashboard__applied span",
+)!;
+const dashboardInterviewedNum = document.querySelector<HTMLHeadingElement>(
+  "#dashboard__interviewed h2",
+)!;
+const dashboardInterviewedPercentage = document.querySelector<HTMLSpanElement>(
+  "#dashboard__interviewed span",
+)!;
+const dashboardOfferedNum = document.querySelector<HTMLHeadingElement>(
+  "#dashboard__offered h2",
+)!;
+const dashboardOfferedPercentage = document.querySelector<HTMLSpanElement>(
+  "#dashboard__offered span",
+)!;
+const dashboardRejectedNum = document.querySelector<HTMLHeadingElement>(
+  "#dashboard__rejected h2",
+)!;
+const dashboardRejectedPercentage = document.querySelector<HTMLSpanElement>(
+  "#dashboard__rejected span",
+)!;
+
+const appContainer = document.querySelector<HTMLDivElement>("#app-container");
 const jobSideArea = document.querySelector<HTMLElement>("#job-side-area");
 const jobSideCloseButton = document.querySelector<HTMLButtonElement>(
   "#job-side-close-button",
@@ -124,24 +158,41 @@ function updateKanbanCounts() {
     "#kanban-rejected-number",
   );
 
-  const appliedNum = jobs.filter(
-    (job) => job.status === JobStatus.applied,
-  ).length;
-  appliedCount!.textContent = String(appliedNum);
+  const jobStats = getJobStats(jobs);
 
-  const interviewdNum = jobs.filter(
-    (job) => job.status === JobStatus.interviewed,
-  ).length;
-  interviewedCount!.textContent = String(interviewdNum);
+  appliedCount!.textContent = String(jobStats.appliedNum);
+  interviewedCount!.textContent = String(jobStats.interviewedNum);
+  offeredCount!.textContent = String(jobStats.offeredNum);
+  rejectedCount!.textContent = String(jobStats.rejectedNum);
+}
 
-  const offeredNum = jobs.filter(
-    (job) => job.status === JobStatus.offered,
-  ).length;
-  offeredCount!.textContent = String(offeredNum);
-  const rejectedNum = jobs.filter(
-    (job) => job.status === JobStatus.rejected,
-  ).length;
-  rejectedCount!.textContent = String(rejectedNum);
+function updateDashboardCounts() {
+  const { appliedNum, interviewedNum, offeredNum, rejectedNum } =
+    getJobStats(jobs);
+
+  const total = jobs.length;
+
+  dashboardTotalNum.textContent = String(total);
+  dashboardAppliedlNum.textContent = String(appliedNum);
+  dashboardAppliedPercentage.textContent = ((appliedNum / total) * 100).toFixed(
+    1,
+  );
+  dashboardInterviewedNum.textContent = String(interviewedNum);
+  dashboardInterviewedPercentage.textContent = (
+    (interviewedNum / total) *
+    100
+  ).toFixed(1);
+
+  dashboardOfferedNum.textContent = String(offeredNum);
+  dashboardOfferedPercentage.textContent = ((offeredNum / total) * 100).toFixed(
+    1,
+  );
+
+  dashboardRejectedNum.textContent = String(rejectedNum);
+  dashboardRejectedPercentage.textContent = (
+    (rejectedNum / total) *
+    100
+  ).toFixed(1);
 }
 
 function createJobCard(job: job, board: HTMLDivElement): void {
@@ -229,12 +280,6 @@ function createJobCard(job: job, board: HTMLDivElement): void {
     spanEl.classList.add("text-amber-500", "text-lg");
     ratingSection.append(spanEl);
   }
-
-  //   const ratingIcon = createIcon(
-  //     ["w-5", "fill-amber-600"],
-  //     "M341.5 45.1C337.4 37.1 329.1 32 320.1 32C311.1 32 302.8 37.1 298.7 45.1L225.1 189.3L65.2 214.7C56.3 216.1 48.9 222.4 46.1 231C43.3 239.6 45.6 249 51.9 255.4L166.3 369.9L141.1 529.8C139.7 538.7 143.4 547.7 150.7 553C158 558.3 167.6 559.1 175.7 555L320.1 481.6L464.4 555C472.4 559.1 482.1 558.3 489.4 553C496.7 547.7 500.4 538.8 499 529.8L473.7 369.9L588.1 255.4C594.5 249 596.7 239.6 593.9 231C591.1 222.4 583.8 216.1 574.8 214.7L415 189.3L341.5 45.1z",
-  //   );
-  //   ratingSection.append(ratingIcon);
 
   const ratingTitle = document.createElement("p");
   ratingTitle.textContent = `${job.rating} ${job.rating === 1 ? "star" : "stars"}`;
@@ -460,26 +505,34 @@ function updateStarUI(id: number, state: starState) {
   }
 }
 
-function drawKanbanJobCards() {
+function startApp() {
   jobs.forEach((job) => {
     createJobCard(job, findBoard(job.status));
   });
+
+  updateDashboardCharts();
+  updateKanbanCounts();
+  updateDashboardCounts();
 }
 
 function closeJobSide() {
-  dashBoard?.classList.remove("grid-cols-[1fr_auto]");
+  appContainer?.classList.remove("grid-cols-[1fr_auto]");
   jobSideArea?.classList.add("hidden");
   kanbanBoard.classList.remove("w-11/12");
   kanbanBoard.classList.add("w-10/12");
+  dashboard.classList.remove("w-11/12");
+  dashboard.classList.add("w-10/12");
 
   document.querySelector<HTMLDivElement>("#timeline")?.remove();
 }
 
 function openJobSide(job: job) {
-  dashBoard?.classList.add("grid-cols-[1fr_auto]");
+  appContainer?.classList.add("grid-cols-[1fr_auto]");
   jobSideArea?.classList.remove("hidden");
   kanbanBoard.classList.remove("w-10/12");
   kanbanBoard.classList.add("w-11/12");
+  dashboard.classList.remove("w-10/12");
+  dashboard.classList.add("w-11/12");
 
   updateJobSideArea(job);
 }
@@ -510,7 +563,6 @@ function handleEditApplication(job: job) {
   notes.value = job.notes ?? "";
   clickedRating = job.rating;
   updateStarUI(job.rating, "full");
-
   editExistingJobId = job.id;
 }
 
@@ -563,7 +615,9 @@ function handleApplicationSubmit(event: SubmitEvent) {
     editExistingJobId = null;
   }
 
+  updateDashboardCharts();
   updateKanbanCounts();
+  updateDashboardCounts();
   closeModal();
 }
 
@@ -580,7 +634,6 @@ function closeModal(): void {
   notes.value = "";
   clickedRating = 0;
   updateStarUI(0, "outline");
-
   modal.classList.add("hidden");
   modal.classList.remove("flex");
 }
@@ -588,6 +641,7 @@ function closeModal(): void {
 function openModal(): void {
   modal.classList.add("flex");
   modal.classList.remove("hidden");
+  modal.scrollTop = 0;
   updateStarRating();
 
   headerTitle.textContent = "Add new application";
@@ -609,8 +663,11 @@ function addJob(
   currentJob!.status = status;
 
   updateKanbanCounts();
+  updateDashboardCharts();
+  updateDashboardCounts();
   closeJobSide();
 }
+
 function findBoard(jobStatus: JobStatus): HTMLDivElement {
   if (jobStatus === JobStatus.applied) {
     return applied;
@@ -652,16 +709,6 @@ function updateStarRating() {
 }
 
 // Drag and Drop Event Listners
-
-// document
-//   .querySelectorAll<HTMLDivElement>(".job")
-//   .forEach((job: HTMLDivElement): void => {
-//     job.addEventListener("dragstart", (event: DragEvent) => {
-//       event.dataTransfer?.setData("text/plain", job.id);
-//       console.log("Dragging has started");
-//     });
-//   });
-
 // uses bubbling for event propagation
 document
   .querySelector<HTMLDivElement>("#kanban-board")!
@@ -703,9 +750,7 @@ rejected.addEventListener("drop", (event: DragEvent) => {
   addJob(event, rejected, JobStatus.rejected);
 });
 
-drawKanbanJobCards();
-
-updateKanbanCounts();
+startApp();
 
 // event Listners
 
@@ -724,6 +769,8 @@ jobSideDeleteButton.addEventListener("click", () => {
   console.log("DELETE CLICKED");
   DeleteJob(selectedSideJob);
   closeJobSide();
+  updateDashboardCharts();
   updateKanbanCounts();
+  updateDashboardCounts();
   console.log(selectedSideJob);
 });

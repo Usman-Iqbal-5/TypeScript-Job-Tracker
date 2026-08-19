@@ -32,13 +32,12 @@
         </button>
     </header>
 
-    <div id="dashboard-area" class="grid w-full">
-        <main id="main-area" class="flex flex-col items-center justify-center w-full mt-5 gap-y-20">
-            <!-- <section class="flex justify-center"> -->
-            <div id="dashboard" class="flex flex-col items-center min-w-fit w-10/12 gap-y-5 p-5 bg-[#F6F5F8] rounded-lg">
+    <div id="app-container" class="grid w-full">
+        <main id="main-area" class="flex flex-col items-center justify-center w-full my-5 gap-y-10">
+            <div id="dashboard" class="flex flex-col items-center gap-y-5 p-5 bg-[#F6F5F8] rounded-lg w-10/12">
                 <div id="dash-stats" class="grid grid-cols-[1.5fr_1.5fr_1fr_1fr_1fr] gap-x-4 w-full">
 
-                    <div
+                    <div id="dashboard__total"
                         class="w-full p-5 min-h-35 rounded-lg shadow-[0_0_10px_rgba(0,0,0,0.15)] bg-linear-to-b from-indigo-800 to-indigo-500 cursor-pointer hover:opacity-90">
                         <div class="flex items-center gap-4 mb-4 text-white">
                             <svg xmlns="http://www.w3.org/2000/svg"
@@ -58,7 +57,7 @@
                         </div>
                     </div>
 
-                    <div
+                    <div id="dashboard__applied"
                         class="w-full p-5 min-h-35 rounded-lg shadow-[0_0_10px_rgba(0,0,0,0.15)] cursor-pointer hover:bg-slate-500/5">
                         <div class="flex items-center gap-4 mb-2">
                             <svg xmlns="http://www.w3.org/2000/svg" class="w-10 p-1.5 bg-blue-600 rounded-lg fill-white"
@@ -71,16 +70,16 @@
                             </h2>
                         </div>
                         <div>
-                            <h3 class="">
+                            <h3>
                                 Applied
                             </h3>
-                            <p class="text-xs text-blue-600">
-                                55.3% of Total
+                            <p class="text-xs text-blue-600 wrap-break-word">
+                                <span>55.3</span>% of Total
                             </p>
                         </div>
                     </div>
 
-                    <div
+                    <div id="dashboard__interviewed"
                         class="w-full p-5 min-h-35 rounded-lg shadow-[0_0_10px_rgba(0,0,0,0.15)] cursor-pointer hover:bg-slate-500/5">
                         <div class="flex items-center gap-4 mb-2">
                             <svg xmlns="http://www.w3.org/2000/svg"
@@ -94,16 +93,16 @@
                             </h2>
                         </div>
                         <div>
-                            <h3 class="">
+                            <h3>
                                 Interviewed
                             </h3>
-                            <p class="text-xs text-amber-600">
-                                23.7% of Total
+                            <p class="text-xs text-amber-600 wrap-break-word">
+                                <span>23.7</span>% of Total
                             </p>
                         </div>
                     </div>
 
-                    <div
+                    <div id="dashboard__offered"
                         class="w-full p-5 min-h-35 rounded-lg shadow-[0_0_10px_rgba(0,0,0,0.15)] cursor-pointer hover:bg-slate-500/5">
                         <div class="flex items-center gap-4 mb-2">
                             <svg xmlns="http://www.w3.org/2000/svg"
@@ -120,13 +119,13 @@
                             <h3 class="">
                                 Offers
                             </h3>
-                            <p class="text-xs text-green-600">
-                                5.3% of Total
+                            <p class="text-xs text-green-600 wrap-break-word">
+                                <span>5.3</span>% of Total
                             </p>
                         </div>
                     </div>
 
-                    <div
+                    <div id="dashboard__rejected"
                         class="w-full p-5 min-h-35 rounded-lg shadow-[0_0_10px_rgba(0,0,0,0.15)] cursor-pointer hover:bg-slate-500/5">
                         <div class="flex items-center gap-4 mb-2">
                             <svg xmlns="http://www.w3.org/2000/svg" class="w-10 p-1.5 bg-red-600 rounded-lg fill-white"
@@ -138,23 +137,35 @@
                                 6
                             </h2>
                         </div>
-                        
+
                         <div>
-                            <h3 class="">
+                            <h3>
                                 Rejected
                             </h3>
-                            <p class="text-xs text-red-600">
-                                15.7% of Total
+                            <p class="text-xs text-red-600 wrap-break-word">
+                                <span>15.7</span>% of Total
                             </p>
                         </div>
                     </div>
                 </div>
-                <div id="dash-charts" class="grid w-full grid-cols-[0.93fr_1fr]">
-                    <div class=" bg-white rounded-lg p-5 min-h-35shadow-[0_0_10px_rgba(0,0,0,0.15)] cursor-pointer hover:bg-slate-500/5">
+                <div id="dash-charts" class="grid w-full min-w-0 grid-cols-2 gap-5">
+
+                    <div class="min-w-0 rounded-lg bg-white p-5 shadow-[0_0_10px_rgba(0,0,0,0.15)]">
                         <h2>Jobs by Status</h2>
 
-                        <canvas id="status-chart" class="w-full"></canvas>
+                        <div class="relative h-50 w-full min-w-0">
+                            <canvas id="status-chart"></canvas>
+                        </div>
                     </div>
+
+                    <div class="min-w-0 rounded-lg bg-white p-5 shadow-[0_0_10px_rgba(0,0,0,0.15)]">
+                        <h2>Applications Over Time</h2>
+
+                        <div class="relative h-50 w-full min-w-0">
+                            <canvas id="applications-chart"></canvas>
+                        </div>
+                    </div>
+
                 </div>
             </div>
             <div id="kanban-board" class="flex items-center min-w-fit w-10/12 gap-2 p-5 bg-[#F6F5F8] rounded-lg h-100">
@@ -199,9 +210,9 @@
                     </div>
                 </section>
             </div>
-            <!-- </section> -->
         </main>
-        <aside id="job-side-area" class="w-[25vw] min-h-screen p-10 bg-white/5 border border-l-white/10 hidden">
+        <aside id="job-side-area"
+            class="w-[25vw] h-screen p-10 bg-white/5 border border-l-white/10 hidden overflow-auto sticky top-0">
             <div class="flex items-center justify-between mb-4">
                 <div class="flex flex-col items-left">
                     <h2 id="job-side__title" class="font-bold text-white">Software Developer</h2>
