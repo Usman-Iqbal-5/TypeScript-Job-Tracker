@@ -10,16 +10,40 @@ import getJobStats from "./utils/jobStats";
 let clickedRating = 0;
 let editExistingJobId: string | null = null;
 let selectedSideJob: job | null;
+let filteredJobs: job[] = jobs;
 
 //Types
 type starState = "full" | "outline";
 
 // Global DOM references
+const sideMenuIcon = document.querySelector<HTMLDivElement>("#sidemenu-icon")!;
+const sideMenuOverlay =
+  document.querySelector<HTMLDivElement>("#sidemenu__overlay")!;
+const sideMenu = document.querySelector<HTMLDivElement>("#sidemenu")!;
+const sideMenuCloseButton =
+  document.querySelector<HTMLDivElement>("#sidemenu-close")!;
+
 const kanbanBoard = document.getElementById("kanban-board") as HTMLDivElement;
-const interviewed = document.getElementById("interviewed") as HTMLDivElement;
-const applied = document.getElementById("applied") as HTMLDivElement;
-const offered = document.getElementById("offered") as HTMLDivElement;
-const rejected = document.getElementById("rejected") as HTMLDivElement;
+const interviewedBoard = document.getElementById(
+  "interviewed",
+) as HTMLDivElement;
+const appliedBoard = document.getElementById("applied") as HTMLDivElement;
+const offeredBoard = document.getElementById("offered") as HTMLDivElement;
+const rejectedBoard = document.getElementById("rejected") as HTMLDivElement;
+
+const interviewedContentArea = document.getElementById(
+  "interviewed__content",
+) as HTMLDivElement;
+const appliedContentArea = document.getElementById(
+  "applied__content",
+) as HTMLDivElement;
+const offeredContentArea = document.getElementById(
+  "offered__content",
+) as HTMLDivElement;
+const rejectedContentArea = document.getElementById(
+  "rejected__content",
+) as HTMLDivElement;
+
 const applicaitonButton = document.getElementById(
   "add-application-button",
 ) as HTMLButtonElement;
@@ -36,19 +60,28 @@ const headerText = document.querySelector<HTMLInputElement>("#modal-header p")!;
 const title = document.querySelector<HTMLInputElement>("#title")!;
 const company = document.querySelector<HTMLInputElement>("#company")!;
 const jobLocation = document.querySelector<HTMLInputElement>("#location")!;
-const dataApplied = document.querySelector<HTMLInputElement>("#data-applied")!;
+const dateApplied = document.querySelector<HTMLInputElement>("#date-applied")!;
 const url = document.querySelector<HTMLInputElement>("#url")!;
 const dateInterviewed =
   document.querySelector<HTMLInputElement>("#date-interviewed")!;
 const dateOffered = document.querySelector<HTMLInputElement>("#date-offered")!;
-const dataRejected =
-  document.querySelector<HTMLInputElement>("#data-rejected")!;
+const dateRejected =
+  document.querySelector<HTMLInputElement>("#date-rejected")!;
 const jobStatus = document.querySelector<HTMLInputElement>("#job-status")!;
 const notes = document.querySelector<HTMLInputElement>("#notes")!;
 const submitFormButton = document.querySelector<HTMLButtonElement>(
   "#submit-application",
 )!;
 
+const searchBarInput = document.querySelector<HTMLInputElement>(
+  "#job-filter #search",
+)!;
+const ratingFilterInput =
+  document.querySelector<HTMLSelectElement>("#rating-filter")!;
+
+const dateFilterInput =
+  document.querySelector<HTMLSelectElement>("#date-filter")!;
+const sortByInput = document.querySelector<HTMLSelectElement>("#sort-filter")!;
 
 const dashboard = document.getElementById("dashboard") as HTMLDivElement;
 // Dashboard stats
@@ -80,7 +113,7 @@ const dashboardRejectedPercentage = document.querySelector<HTMLSpanElement>(
   "#dashboard__rejected span",
 )!;
 
-const appContainer = document.querySelector<HTMLDivElement>("#app-container");
+const workspace = document.querySelector<HTMLDivElement>("#workspace");
 const jobSideArea = document.querySelector<HTMLElement>("#job-side-area");
 const jobSideCloseButton = document.querySelector<HTMLButtonElement>(
   "#job-side-close-button",
@@ -117,6 +150,67 @@ function DeleteJob(job: job): void {
   }
   // update UI KanbanBoard
   RemoveJobCardFromUI(job.id);
+}
+
+// utlity functions
+
+function calculateDateFilter(jobs: job[]) {
+  const now = new Date().getTime();
+}
+
+function applyFilters() {
+  const searchValue = searchBarInput.value.toLowerCase();
+
+  filteredJobs = jobs
+    .filter((job) => {
+      const searchFilter =
+        job.title.toLowerCase().includes(searchValue) ||
+        job.company.toLowerCase().includes(searchValue) ||
+        job.notes?.toLowerCase().includes(searchValue);
+
+      const ratingFilter =
+        ratingFilterInput.value === "all" ||
+        job.rating === Number(ratingFilterInput.value);
+
+      // const dateFilter = job;
+
+      console.log(ratingFilterInput.value);
+      console.log(job.rating);
+
+      return searchFilter && ratingFilter;
+    })
+    .sort((a: job, b: job) => {
+      switch (sortByInput.value) {
+        case "newest":
+          return (
+            new Date(b.appliedDate).getTime() -
+            new Date(a.appliedDate).getTime()
+          );
+
+        case "oldest":
+          return (
+            new Date(a.appliedDate).getTime() -
+            new Date(b.appliedDate).getTime()
+          );
+
+        case "highestRated":
+          return b.rating - a.rating;
+
+        case "lowedtRated":
+          return a.rating - b.rating;
+
+        case "a-z":
+          return a.company.localeCompare(b.company);
+
+        case "z-a":
+          return b.company.localeCompare(a.company);
+
+        default:
+          return 0;
+      }
+    });
+
+  renderJobs(filteredJobs);
 }
 
 // Rendering UI Functions
@@ -196,6 +290,7 @@ function updateDashboardCounts() {
 }
 
 function createJobCard(job: job, board: HTMLDivElement): void {
+  console.log("CREATE CARD:", job.id);
   // job card
   const card = document.createElement("div");
   card.id = job.id;
@@ -343,6 +438,15 @@ function createJobCard(job: job, board: HTMLDivElement): void {
   card.append(locationSection);
   card.append(ratingSection);
   card.append(cardFooter);
+
+  console.log(
+    "APPENDING CARD:",
+    job.id,
+    "TO:",
+    board.id,
+    "CURRENT CHILDREN:",
+    board.children.length,
+  );
 
   board.append(card);
 }
@@ -505,18 +609,33 @@ function updateStarUI(id: number, state: starState) {
   }
 }
 
-function startApp() {
-  jobs.forEach((job) => {
+function renderJobs(jobArray: job[]) {
+  console.log("JOBS TO RENDER:", jobArray);
+  console.log("NUMBER:", jobArray.length);
+  console.log(
+    "IDS:",
+    jobArray.map((job) => job.id),
+  );
+
+  interviewedContentArea.innerHTML = "";
+  appliedContentArea.innerHTML = "";
+  offeredContentArea.innerHTML = "";
+  rejectedContentArea.innerHTML = "";
+
+  jobArray.forEach((job) => {
     createJobCard(job, findBoard(job.status));
   });
+}
 
+function startApp(): void {
+  renderJobs(jobs);
   updateDashboardCharts();
   updateKanbanCounts();
   updateDashboardCounts();
 }
 
 function closeJobSide() {
-  appContainer?.classList.remove("grid-cols-[1fr_auto]");
+  workspace?.classList.remove("grid-cols-[1fr_auto]");
   jobSideArea?.classList.add("hidden");
   kanbanBoard.classList.remove("w-11/12");
   kanbanBoard.classList.add("w-10/12");
@@ -527,7 +646,7 @@ function closeJobSide() {
 }
 
 function openJobSide(job: job) {
-  appContainer?.classList.add("grid-cols-[1fr_auto]");
+  workspace?.classList.add("grid-cols-[1fr_auto]");
   jobSideArea?.classList.remove("hidden");
   kanbanBoard.classList.remove("w-10/12");
   kanbanBoard.classList.add("w-11/12");
@@ -546,6 +665,42 @@ function createTimeLine(job: job) {
   timeLineSection?.append(createTimeline(job));
 }
 
+function closeModal(): void {
+  title.value = "";
+  company.value = "";
+  jobLocation.value = "";
+  dateApplied.value = "";
+  dateOffered.value = "";
+  dateInterviewed.value = "";
+  dateRejected.value = "";
+  url.value = "";
+  jobStatus.value = "";
+  notes.value = "";
+  clickedRating = 0;
+  updateStarUI(0, "outline");
+  modal.classList.add("hidden");
+  modal.classList.remove("flex");
+}
+
+function openModal(): void {
+  modal.classList.add("flex");
+  modal.classList.remove("hidden");
+  modal.scrollTop = 0;
+  updateStarRating();
+
+  headerTitle.textContent = "Add new application";
+  headerText.textContent = "Fill in the details of the job application";
+  submitFormButton.textContent = "Submit Application";
+}
+
+function handleOpeningSideMenu() {
+  sideMenuOverlay.classList.remove("hidden");
+}
+
+function handleClosingSideMenu() {
+  sideMenuOverlay.classList.add("hidden");
+}
+
 // form/modal function
 
 function handleEditApplication(job: job) {
@@ -554,10 +709,10 @@ function handleEditApplication(job: job) {
   title.value = job.title;
   company.value = job.company;
   jobLocation.value = job.location;
-  dataApplied.value = job.appliedDate;
+  dateApplied.value = job.appliedDate;
   dateOffered.value = job.offerDate ?? "";
   dateInterviewed.value = job.interviewedDate ?? "";
-  dataRejected.value = job.rejectedDate ?? "";
+  dateRejected.value = job.rejectedDate ?? "";
   url.value = job.url;
   jobStatus.value = job.status;
   notes.value = job.notes ?? "";
@@ -579,10 +734,10 @@ function handleApplicationSubmit(event: SubmitEvent) {
       title: title.value,
       company: company.value,
       location: jobLocation.value,
-      appliedDate: dataApplied.value,
+      appliedDate: dateApplied.value,
       offerDate: dateOffered.value,
       interviewedDate: dateInterviewed.value,
-      rejectedDate: dataRejected.value,
+      rejectedDate: dateRejected.value,
       url: url.value,
       status: jobStatus.value as JobStatus,
       notes: notes.value,
@@ -598,10 +753,10 @@ function handleApplicationSubmit(event: SubmitEvent) {
     currentJob.title = title.value;
     currentJob.company = company.value;
     currentJob.location = jobLocation.value;
-    currentJob.appliedDate = dataApplied.value;
+    currentJob.appliedDate = dateApplied.value;
     currentJob.offerDate = dateOffered.value;
     currentJob.interviewedDate = dateInterviewed.value;
-    currentJob.rejectedDate = dataRejected.value;
+    currentJob.rejectedDate = dateRejected.value;
     currentJob.url = url.value;
     currentJob.status = jobStatus.value as JobStatus;
     currentJob.notes = notes.value;
@@ -621,34 +776,6 @@ function handleApplicationSubmit(event: SubmitEvent) {
   closeModal();
 }
 
-function closeModal(): void {
-  title.value = "";
-  company.value = "";
-  jobLocation.value = "";
-  dataApplied.value = "";
-  dateOffered.value = "";
-  dateInterviewed.value = "";
-  dataRejected.value = "";
-  url.value = "";
-  jobStatus.value = "";
-  notes.value = "";
-  clickedRating = 0;
-  updateStarUI(0, "outline");
-  modal.classList.add("hidden");
-  modal.classList.remove("flex");
-}
-
-function openModal(): void {
-  modal.classList.add("flex");
-  modal.classList.remove("hidden");
-  modal.scrollTop = 0;
-  updateStarRating();
-
-  headerTitle.textContent = "Add new application";
-  headerText.textContent = "Fill in the details of the job application";
-  submitFormButton.textContent = "Submit Application";
-}
-
 function addJob(
   event: DragEvent,
   board: HTMLDivElement,
@@ -656,7 +783,7 @@ function addJob(
 ): void {
   const id = event.dataTransfer?.getData("text/plain")!;
   const job = document.getElementById(id) as HTMLDivElement;
-  board.firstElementChild!.after(job);
+  board.prepend(job);
 
   // update array
   const currentJob = jobs.find((job) => job.id === id)!;
@@ -670,13 +797,13 @@ function addJob(
 
 function findBoard(jobStatus: JobStatus): HTMLDivElement {
   if (jobStatus === JobStatus.applied) {
-    return applied;
+    return appliedContentArea;
   } else if (jobStatus === JobStatus.interviewed) {
-    return interviewed;
+    return interviewedContentArea;
   } else if (jobStatus === JobStatus.offered) {
-    return offered;
+    return offeredContentArea;
   } else {
-    return rejected;
+    return rejectedContentArea;
   }
 }
 
@@ -718,39 +845,37 @@ document
     console.log("Dragging has started");
   });
 
-interviewed.addEventListener("dragover", (e) => {
+interviewedBoard.addEventListener("dragover", (e) => {
   e.preventDefault();
 });
 
-interviewed.addEventListener("drop", (event: DragEvent) => {
-  addJob(event, interviewed, JobStatus.interviewed);
+interviewedBoard.addEventListener("drop", (event: DragEvent) => {
+  addJob(event, interviewedContentArea, JobStatus.interviewed);
 });
 
-applied.addEventListener("dragover", (e) => {
+appliedBoard.addEventListener("dragover", (e) => {
   e.preventDefault();
 });
 
-applied.addEventListener("drop", (event: DragEvent) => {
-  addJob(event, applied, JobStatus.applied);
+appliedBoard.addEventListener("drop", (event: DragEvent) => {
+  addJob(event, appliedContentArea, JobStatus.applied);
 });
 
-offered.addEventListener("dragover", (event: DragEvent) => {
+offeredBoard.addEventListener("dragover", (event: DragEvent) => {
   event.preventDefault();
 });
 
-offered.addEventListener("drop", (event: DragEvent) => {
-  addJob(event, offered, JobStatus.offered);
+offeredBoard.addEventListener("drop", (event: DragEvent) => {
+  addJob(event, offeredContentArea, JobStatus.offered);
 });
 
-rejected.addEventListener("dragover", (event: DragEvent) => {
+rejectedBoard.addEventListener("dragover", (event: DragEvent) => {
   event.preventDefault();
 });
 
-rejected.addEventListener("drop", (event: DragEvent) => {
-  addJob(event, rejected, JobStatus.rejected);
+rejectedBoard.addEventListener("drop", (event: DragEvent) => {
+  addJob(event, rejectedContentArea, JobStatus.rejected);
 });
-
-startApp();
 
 // event Listners
 
@@ -774,3 +899,17 @@ jobSideDeleteButton.addEventListener("click", () => {
   updateDashboardCounts();
   console.log(selectedSideJob);
 });
+
+searchBarInput.addEventListener("input", applyFilters);
+ratingFilterInput.addEventListener("change", applyFilters);
+// dateFilterInput.addEventListener("change", applyFilters);
+sortByInput.addEventListener("change", applyFilters);
+sideMenuIcon.addEventListener("click", handleOpeningSideMenu);
+sideMenuCloseButton.addEventListener("click", handleClosingSideMenu);
+sideMenuOverlay.addEventListener("click", handleClosingSideMenu);
+sideMenu.addEventListener("click", (event: PointerEvent) => {
+  event.stopPropagation();
+});
+
+
+startApp();

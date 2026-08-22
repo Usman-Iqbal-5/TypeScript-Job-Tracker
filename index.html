@@ -14,276 +14,377 @@
 
 <body class="bg-slate-950 font-[Manrope] w-full">
 
-    <header class="flex items-center justify-between w-full py-4 pl-5 pr-10 border-b bg-slate-900 border-b-white/10">
-        <div class="flex items-center gap-2">
-            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 cursor-pointer fill-white hover:fill-indigo-500"
-                viewBox="0 0 640 640"><!--!Font Awesome Free v7.3.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2026 Fonticons, Inc.-->
-                <path
-                    d="M96 160C96 142.3 110.3 128 128 128L512 128C529.7 128 544 142.3 544 160C544 177.7 529.7 192 512 192L128 192C110.3 192 96 177.7 96 160zM96 320C96 302.3 110.3 288 128 288L512 288C529.7 288 544 302.3 544 320C544 337.7 529.7 352 512 352L128 352C110.3 352 96 337.7 96 320zM544 480C544 497.7 529.7 512 512 512L128 512C110.3 512 96 497.7 96 480C96 462.3 110.3 448 128 448L512 448C529.7 448 544 462.3 544 480z" />
-            </svg>
-            <div>
-                <h1 class="text-lg font-semibold text-white">Dashboard</h1>
-                <p class="text-xs text-white font-extralight">Overview of your job applications</p>
-            </div>
-        </div>
-        <button id="add-application-button"
-            class="p-2 text-xs text-white bg-indigo-600 rounded-lg cursor-pointer hover:bg-indigo-800">
-            &#43; Add Applicaiton
-        </button>
-    </header>
-
-    <div id="app-container" class="grid w-full">
-        <main id="main-area" class="flex flex-col items-center justify-center w-full my-5 gap-y-10">
-            <div id="dashboard" class="flex flex-col items-center gap-y-5 p-5 bg-[#F6F5F8] rounded-lg w-10/12">
-                <div id="dash-stats" class="grid grid-cols-[1.5fr_1.5fr_1fr_1fr_1fr] gap-x-4 w-full">
-
-                    <div id="dashboard__total"
-                        class="w-full p-5 min-h-35 rounded-lg shadow-[0_0_10px_rgba(0,0,0,0.15)] bg-linear-to-b from-indigo-800 to-indigo-500 cursor-pointer hover:opacity-90">
-                        <div class="flex items-center gap-4 mb-4 text-white">
-                            <svg xmlns="http://www.w3.org/2000/svg"
-                                class="w-10 p-1.5 bg-white rounded-lg fill-indigo-600"
-                                viewBox="0 0 640 640"><!--!Font Awesome Free v7.3.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2026 Fonticons, Inc.-->
-                                <path
-                                    d="M304 112L192 112C183.2 112 176 119.2 176 128L176 512C176 520.8 183.2 528 192 528L448 528C456.8 528 464 520.8 464 512L464 272L376 272C336.2 272 304 239.8 304 200L304 112zM444.1 224L352 131.9L352 200C352 213.3 362.7 224 376 224L444.1 224zM128 128C128 92.7 156.7 64 192 64L325.5 64C342.5 64 358.8 70.7 370.8 82.7L493.3 205.3C505.3 217.3 512 233.6 512 250.6L512 512C512 547.3 483.3 576 448 576L192 576C156.7 576 128 547.3 128 512L128 128z" />
-                            </svg>
-                            <h2 class="text-4xl font-bold">
-                                9
-                            </h2>
-                        </div>
-                        <div>
-                            <h3 class="text-white">
-                                Total Applications
-                            </h3>
-                        </div>
-                    </div>
-
-                    <div id="dashboard__applied"
-                        class="w-full p-5 min-h-35 rounded-lg shadow-[0_0_10px_rgba(0,0,0,0.15)] cursor-pointer hover:bg-slate-500/5">
-                        <div class="flex items-center gap-4 mb-2">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="w-10 p-1.5 bg-blue-600 rounded-lg fill-white"
-                                viewBox="0 0 640 640"><!--!Font Awesome Free v7.3.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2026 Fonticons, Inc.-->
-                                <path
-                                    d="M322.5 351.7L523.4 150.9L391 520.3L322.5 351.7zM489.4 117L288.6 317.8L120 249.3L489.4 117zM70.1 280.8L275.9 364.4L359.5 570.2C364.8 583.3 377.6 591.9 391.8 591.9C406.5 591.9 419.6 582.7 424.6 568.8L602.6 72C606.1 62.2 603.6 51.4 596.3 44C589 36.6 578.1 34.2 568.3 37.7L71.4 215.7C57.5 220.7 48.3 233.8 48.3 248.5C48.3 262.7 56.9 275.5 70 280.8z" />
-                            </svg>
-                            <h2 class="text-4xl font-bold">
-                                23
-                            </h2>
-                        </div>
-                        <div>
-                            <h3>
-                                Applied
-                            </h3>
-                            <p class="text-xs text-blue-600 wrap-break-word">
-                                <span>55.3</span>% of Total
-                            </p>
-                        </div>
-                    </div>
-
-                    <div id="dashboard__interviewed"
-                        class="w-full p-5 min-h-35 rounded-lg shadow-[0_0_10px_rgba(0,0,0,0.15)] cursor-pointer hover:bg-slate-500/5">
-                        <div class="flex items-center gap-4 mb-2">
-                            <svg xmlns="http://www.w3.org/2000/svg"
-                                class="w-10 p-1.5 rounded-lg bg-amber-600 fill-white"
-                                viewBox="0 0 640 640"><!--!Font Awesome Free v7.3.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2026 Fonticons, Inc.-->
-                                <path
-                                    d="M96 192C96 130.1 146.1 80 208 80C269.9 80 320 130.1 320 192C320 253.9 269.9 304 208 304C146.1 304 96 253.9 96 192zM32 528C32 430.8 110.8 352 208 352C305.2 352 384 430.8 384 528L384 534C384 557.2 365.2 576 342 576L74 576C50.8 576 32 557.2 32 534L32 528zM464 128C517 128 560 171 560 224C560 277 517 320 464 320C411 320 368 277 368 224C368 171 411 128 464 128zM464 368C543.5 368 608 432.5 608 512L608 534.4C608 557.4 589.4 576 566.4 576L421.6 576C428.2 563.5 432 549.2 432 534L432 528C432 476.5 414.6 429.1 385.5 391.3C408.1 376.6 435.1 368 464 368z" />
-                            </svg>
-                            <h2 class="text-4xl font-bold">
-                                9
-                            </h2>
-                        </div>
-                        <div>
-                            <h3>
-                                Interviewed
-                            </h3>
-                            <p class="text-xs text-amber-600 wrap-break-word">
-                                <span>23.7</span>% of Total
-                            </p>
-                        </div>
-                    </div>
-
-                    <div id="dashboard__offered"
-                        class="w-full p-5 min-h-35 rounded-lg shadow-[0_0_10px_rgba(0,0,0,0.15)] cursor-pointer hover:bg-slate-500/5">
-                        <div class="flex items-center gap-4 mb-2">
-                            <svg xmlns="http://www.w3.org/2000/svg"
-                                class="w-10 p-1.5 bg-green-600 rounded-lg fill-white"
-                                viewBox="0 0 640 640"><!--!Font Awesome Free v7.3.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2026 Fonticons, Inc.-->
-                                <path
-                                    d="M530.8 134.1C545.1 144.5 548.3 164.5 537.9 178.8L281.9 530.8C276.4 538.4 267.9 543.1 258.5 543.9C249.1 544.7 240 541.2 233.4 534.6L105.4 406.6C92.9 394.1 92.9 373.8 105.4 361.3C117.9 348.8 138.2 348.8 150.7 361.3L252.2 462.8L486.2 141.1C496.6 126.8 516.6 123.6 530.9 134z" />
-                            </svg>
-                            <h2 class="text-4xl font-bold">
-                                2
-                            </h2>
-                        </div>
-                        <div>
-                            <h3 class="">
-                                Offers
-                            </h3>
-                            <p class="text-xs text-green-600 wrap-break-word">
-                                <span>5.3</span>% of Total
-                            </p>
-                        </div>
-                    </div>
-
-                    <div id="dashboard__rejected"
-                        class="w-full p-5 min-h-35 rounded-lg shadow-[0_0_10px_rgba(0,0,0,0.15)] cursor-pointer hover:bg-slate-500/5">
-                        <div class="flex items-center gap-4 mb-2">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="w-10 p-1.5 bg-red-600 rounded-lg fill-white"
-                                viewBox="0 0 640 640"><!--!Font Awesome Free v7.3.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2026 Fonticons, Inc.-->
-                                <path
-                                    d="M504.6 148.5C515.9 134.9 514.1 114.7 500.5 103.4C486.9 92.1 466.7 93.9 455.4 107.5L320 270L184.6 107.5C173.3 93.9 153.1 92.1 139.5 103.4C125.9 114.7 124.1 134.9 135.4 148.5L278.3 320L135.4 491.5C124.1 505.1 125.9 525.3 139.5 536.6C153.1 547.9 173.3 546.1 184.6 532.5L320 370L455.4 532.5C466.7 546.1 486.9 547.9 500.5 536.6C514.1 525.3 515.9 505.1 504.6 491.5L361.7 320L504.6 148.5z" />
-                            </svg>
-                            <h2 class="text-4xl font-bold">
-                                6
-                            </h2>
-                        </div>
-
-                        <div>
-                            <h3>
-                                Rejected
-                            </h3>
-                            <p class="text-xs text-red-600 wrap-break-word">
-                                <span>15.7</span>% of Total
-                            </p>
-                        </div>
-                    </div>
-                </div>
-                <div id="dash-charts" class="grid w-full min-w-0 grid-cols-2 gap-5">
-
-                    <div class="min-w-0 rounded-lg bg-white p-5 shadow-[0_0_10px_rgba(0,0,0,0.15)]">
-                        <h2>Jobs by Status</h2>
-
-                        <div class="relative h-50 w-full min-w-0">
-                            <canvas id="status-chart"></canvas>
-                        </div>
-                    </div>
-
-                    <div class="min-w-0 rounded-lg bg-white p-5 shadow-[0_0_10px_rgba(0,0,0,0.15)]">
-                        <h2>Applications Over Time</h2>
-
-                        <div class="relative h-50 w-full min-w-0">
-                            <canvas id="applications-chart"></canvas>
-                        </div>
-                    </div>
-
-                </div>
-            </div>
-            <div id="kanban-board" class="flex items-center min-w-fit w-10/12 gap-2 p-5 bg-[#F6F5F8] rounded-lg h-100">
-                <section id="applied-section"
-                    class="flex-1 h-full border-t-4 rounded-lg shadow-[0_0_10px_rgba(0,0,0,0.15)] border-t-blue-500 bg-gray-100">
-                    <div id="applied"
-                        class="flex flex-col items-center h-full gap-2 p-2 overflow-y-auto [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:bg-transparent">
-                        <div class="flex items-center w-full gap-2 text-left">
-                            <h2 class="font-bold">Applied</h2><span id="kanban-applied-number"
-                                class="text-sm text-center text-blue-500 bg-blue-100 rounded-full min-h-5 min-w-5"></span>
-                        </div>
-                    </div>
-                </section>
-                <section id="interview-section"
-                    class="flex-1 h-full border border-t-4 rounded-lg shadow-[0_0_10px_rgba(0,0,0,0.15)] border-black/10 border-t-orange-500">
-                    <div id="interviewed"
-                        class="flex flex-col items-center h-full gap-2 p-2 overflow-y-auto  [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:bg-transparent">
-                        <div class="flex items-center w-full gap-2 text-left">
-                            <h2 class="font-bold">Interview</h2><span id="kanban-interviewed-number"
-                                class="text-sm text-center text-orange-500 bg-orange-100 rounded-full min-h-5 min-w-5"></span>
-                        </div>
-                    </div>
-                </section>
-                <section id="offered-section"
-                    class="flex-1 h-full border border-t-4 rounded-lg shadow-[0_0_10px_rgba(0,0,0,0.15)] border-black/10 border-t-green-500">
-                    <div id="offered"
-                        class="flex flex-col items-center h-full gap-2 p-2 overflow-y-auto [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:bg-transparent">
-                        <div class="flex items-center w-full gap-2 text-left">
-                            <h2 class="font-bold">Offered</h2><span id="kanban-offered-number"
-                                class="text-sm text-center text-green-500 bg-green-100 rounded-full min-h-5 min-w-5"></span>
-                        </div>
-                    </div>
-                </section>
-                <section id="rejected-section"
-                    class="flex-1 h-full border border-t-4 rounded-lg shadow-[0_0_10px_rgba(0,0,0,0.15)] border-black/10 border-t-red-500">
-                    <div id="rejected"
-                        class="flex flex-col items-center h-full gap-2 p-2 overflow-y-auto  [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:bg-transparent">
-                        <div class="flex items-center w-full gap-2 text-left">
-                            <h2 class="font-bold">Rejected</h2><span id="kanban-rejected-number"
-                                class="text-sm text-center text-red-500 bg-red-100 rounded-full min-h-5 min-w-5"></span>
-                        </div>
-                    </div>
-                </section>
-            </div>
-        </main>
-        <aside id="job-side-area"
-            class="w-[25vw] h-screen p-10 bg-white/5 border border-l-white/10 hidden overflow-auto sticky top-0">
-            <div class="flex items-center justify-between mb-4">
-                <div class="flex flex-col items-left">
-                    <h2 id="job-side__title" class="font-bold text-white">Software Developer</h2>
-                    <p id="job-side__company" class="text-sm font-light text-white/80">BAE Systems</p>
-                </div>
-                <button id="job-side-close-button" class="self-start text-lg font-bold cursor-pointer">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 fill-white font hover:fill-indigo-600"
+    <div id="app-container" class="w-full">
+        <!-- Side Menu -->
+        <div id="sidemenu__overlay" class="fixed inset-0 hidden text-sm text-white z-1000">
+            <div id="sidemenu" class="fixed top-0 left-0 w-64 h-full p-4 border-r bg-slate-900 border-r-white/20 z-2000">
+                <div class="flex items-center w-full gap-x-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 fill-indigo-600"
                         viewBox="0 0 640 640"><!--!Font Awesome Free v7.3.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2026 Fonticons, Inc.-->
                         <path
-                            d="M183.1 137.4C170.6 124.9 150.3 124.9 137.8 137.4C125.3 149.9 125.3 170.2 137.8 182.7L275.2 320L137.9 457.4C125.4 469.9 125.4 490.2 137.9 502.7C150.4 515.2 170.7 515.2 183.2 502.7L320.5 365.3L457.9 502.6C470.4 515.1 490.7 515.1 503.2 502.6C515.7 490.1 515.7 469.8 503.2 457.3L365.8 320L503.1 182.6C515.6 170.1 515.6 149.8 503.1 137.3C490.6 124.8 470.3 124.8 457.8 137.3L320.5 274.7L183.1 137.4z" />
+                            d="M264 112L376 112C380.4 112 384 115.6 384 120L384 160L256 160L256 120C256 115.6 259.6 112 264 112zM208 120L208 544L432 544L432 120C432 89.1 406.9 64 376 64L264 64C233.1 64 208 89.1 208 120zM480 160L480 544L512 544C547.3 544 576 515.3 576 480L576 224C576 188.7 547.3 160 512 160L480 160zM160 544L160 160L128 160C92.7 160 64 188.7 64 224L64 480C64 515.3 92.7 544 128 544L160 544z" />
                     </svg>
-                </button>
-            </div>
-            <div
-                class="flex items-center justify-between p-2 text-[0.6rem] text-white border rounded-lg h-15 border-white/10">
-                <button id="job-side__open"
-                    class="flex-1 border-r cursor-pointer hover:text-indigo-600 border-r-white/10">
-                    <a class="flex flex-col items-center" href="" target="_blank">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 fill-current"
+                    <h2 class="text-lg font-bold">Job<span class="text-indigo-600">Tracker</span></h2>
+                    <button id="sidemenu-close"
+                        class="ml-auto text-lg font-bold bg-transparent cursor-pointer hover:text-indigo-800">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 fill-white hover:fill-current"
                             viewBox="0 0 640 640"><!--!Font Awesome Free v7.3.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2026 Fonticons, Inc.-->
                             <path
-                                d="M415.9 344L225 344C227.9 408.5 242.2 467.9 262.5 511.4C273.9 535.9 286.2 553.2 297.6 563.8C308.8 574.3 316.5 576 320.5 576C324.5 576 332.2 574.3 343.4 563.8C354.8 553.2 367.1 535.8 378.5 511.4C398.8 467.9 413.1 408.5 416 344zM224.9 296L415.8 296C413 231.5 398.7 172.1 378.4 128.6C367 104.2 354.7 86.8 343.3 76.2C332.1 65.7 324.4 64 320.4 64C316.4 64 308.7 65.7 297.5 76.2C286.1 86.8 273.8 104.2 262.4 128.6C242.1 172.1 227.8 231.5 224.9 296zM176.9 296C180.4 210.4 202.5 130.9 234.8 78.7C142.7 111.3 74.9 195.2 65.5 296L176.9 296zM65.5 344C74.9 444.8 142.7 528.7 234.8 561.3C202.5 509.1 180.4 429.6 176.9 344L65.5 344zM463.9 344C460.4 429.6 438.3 509.1 406 561.3C498.1 528.6 565.9 444.8 575.3 344L463.9 344zM575.3 296C565.9 195.2 498.1 111.3 406 78.7C438.3 130.9 460.4 210.4 463.9 296L575.3 296z" />
+                                d="M183.1 137.4C170.6 124.9 150.3 124.9 137.8 137.4C125.3 149.9 125.3 170.2 137.8 182.7L275.2 320L137.9 457.4C125.4 469.9 125.4 490.2 137.9 502.7C150.4 515.2 170.7 515.2 183.2 502.7L320.5 365.3L457.9 502.6C470.4 515.1 490.7 515.1 503.2 502.6C515.7 490.1 515.7 469.8 503.2 457.3L365.8 320L503.1 182.6C515.6 170.1 515.6 149.8 503.1 137.3C490.6 124.8 470.3 124.8 457.8 137.3L320.5 274.7L183.1 137.4z" />
                         </svg>
-                        <span>
-                            Website
-                        </span>
+                    </button>
+                </div>
+                <nav class="py-2">
+                    <a href="#dashboard"
+                        class="flex items-center h-10 gap-2 p-2 rounded-lg cursor-pointer group hover:bg-indigo-500/20">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 fill-white group-hover:fill-indigo-600"
+                            viewBox="0 0 640 640"><!--!Font Awesome Free v7.3.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2026 Fonticons, Inc.-->
+                            <path
+                                d="M341.8 72.6C329.5 61.2 310.5 61.2 298.3 72.6L74.3 280.6C64.7 289.6 61.5 303.5 66.3 315.7C71.1 327.9 82.8 336 96 336L112 336L112 512C112 547.3 140.7 576 176 576L464 576C499.3 576 528 547.3 528 512L528 336L544 336C557.2 336 569 327.9 573.8 315.7C578.6 303.5 575.4 289.5 565.8 280.6L341.8 72.6zM304 384L336 384C362.5 384 384 405.5 384 432L384 528L256 528L256 432C256 405.5 277.5 384 304 384z" />
+                        </svg>
+                        Dashboard
                     </a>
-                </button>
-                <button id="job-side__edit"
-                    class="flex flex-col items-center flex-1 border-r cursor-pointer border-r-white/10 hover:text-green-600">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 fill-current"
+                    <a href="#kanban-board"
+                        class="flex items-center h-10 gap-2 p-2 rounded-lg cursor-pointer hover:bg-indigo-500/20 group">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 fill-white group-hover:fill-indigo-600"
+                            viewBox="0 0 640 640"><!--!Font Awesome Free v7.3.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2026 Fonticons, Inc.-->
+                            <path
+                                d="M192 64C156.7 64 128 92.7 128 128L128 512C128 547.3 156.7 576 192 576L448 576C483.3 576 512 547.3 512 512L512 234.5C512 217.5 505.3 201.2 493.3 189.2L386.7 82.7C374.7 70.7 358.5 64 341.5 64L192 64zM453.5 240L360 240C346.7 240 336 229.3 336 216L336 122.5L453.5 240z" />
+                        </svg>
+                        Job Board
+                    </a>
+                </nav>
+            </div>
+        </div>
+
+        <div>
+            <header
+                class="flex items-center justify-between w-full py-4 pl-5 pr-10 border-b bg-slate-900 border-b-white/20">
+                <div class="flex items-center gap-2">
+                    <svg id="sidemenu-icon" xmlns="http://www.w3.org/2000/svg" class="w-5 cursor-pointer fill-white hover:fill-indigo-500"
                         viewBox="0 0 640 640"><!--!Font Awesome Free v7.3.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2026 Fonticons, Inc.-->
                         <path
-                            d="M100.4 417.2C104.5 402.6 112.2 389.3 123 378.5L304.2 197.3L338.1 163.4C354.7 180 389.4 214.7 442.1 267.4L476 301.3L442.1 335.2L260.9 516.4C250.2 527.1 236.8 534.9 222.2 539L94.4 574.6C86.1 576.9 77.1 574.6 71 568.4C64.9 562.2 62.6 553.3 64.9 545L100.4 417.2zM156 413.5C151.6 418.2 148.4 423.9 146.7 430.1L122.6 517L209.5 492.9C215.9 491.1 221.7 487.8 226.5 483.2L155.9 413.5zM510 267.4C493.4 250.8 458.7 216.1 406 163.4L372 129.5C398.5 103 413.4 88.1 416.9 84.6C430.4 71 448.8 63.4 468 63.4C487.2 63.4 505.6 71 519.1 84.6L554.8 120.3C568.4 133.9 576 152.3 576 171.4C576 190.5 568.4 209 554.8 222.5C551.3 226 536.4 240.9 509.9 267.4z" />
+                            d="M96 160C96 142.3 110.3 128 128 128L512 128C529.7 128 544 142.3 544 160C544 177.7 529.7 192 512 192L128 192C110.3 192 96 177.7 96 160zM96 320C96 302.3 110.3 288 128 288L512 288C529.7 288 544 302.3 544 320C544 337.7 529.7 352 512 352L128 352C110.3 352 96 337.7 96 320zM544 480C544 497.7 529.7 512 512 512L128 512C110.3 512 96 497.7 96 480C96 462.3 110.3 448 128 448L512 448C529.7 448 544 462.3 544 480z" />
                     </svg>
-                    <span>
-                        Edit
-                    </span>
+                    <div>
+                        <h1 class="text-lg font-semibold text-white">Dashboard</h1>
+                        <p class="text-xs text-white font-extralight">Overview of your job applications</p>
+                    </div>
+                </div>
+                <button id="add-application-button"
+                    class="p-2 text-xs text-white bg-indigo-600 rounded-lg cursor-pointer hover:bg-indigo-800">
+                    &#43; Add Applicaiton
                 </button>
-                <button id="job-side__delete"
-                    class="flex flex-col items-center flex-1 cursor-pointer hover:text-red-600">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 fill-current"
-                        viewBox="0 0 640 640"><!--!Font Awesome Free v7.3.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2026 Fonticons, Inc.-->
-                        <path
-                            d="M232.7 69.9L224 96L128 96C110.3 96 96 110.3 96 128C96 145.7 110.3 160 128 160L512 160C529.7 160 544 145.7 544 128C544 110.3 529.7 96 512 96L416 96L407.3 69.9C402.9 56.8 390.7 48 376.9 48L263.1 48C249.3 48 237.1 56.8 232.7 69.9zM512 208L128 208L149.1 531.1C150.7 556.4 171.7 576 197 576L443 576C468.3 576 489.3 556.4 490.9 531.1L512 208z" />
-                    </svg>
-                    <span>
-                        Delete
-                    </span>
-                </button>
-            </div>
-            <div class="grid grid-cols-2 mt-4 text-xs text-white gap-y-2">
-                <p class="font-bold">Location</p>
-                <p id="job-side__location" class="text-right">Dudley, UK</p>
-                <p class="font-bold">Data Applied</p>
-                <p id="job-side__applied-date" class="text-right">2025-08-16</p>
-                <p class="font-bold">Status</p>
-                <p id="job-side__status" class="text-right">Applied</p>
-                <p class="font-bold">Rating</p>
-                <p id="job-side__rating" class="text-right text-amber-500">&starf; &starf; &starf; &starf; &star;</p>
-                <p class="mt-2 font-bold">Notes</p>
-                <p id="job-side__notes" class="p-4 border rounded-lg col-span-full border-white/10 text-[0.7rem]">This
-                    job matches very well with my skill
-                    set.</p>
-            </div>
+            </header>
 
-            <div id="timeline-section">
-                <h3 class="p-2 mb-4 font-bold text-white border-b border-b-white/10">Timeline</h3>
-            </div>
+            <div id="workspace" class="grid w-full">
+                <main id="main-area" class="flex flex-col items-center justify-center w-full my-5 gap-y-4">
+                    <div id="dashboard" class="flex flex-col items-center gap-y-5 p-5 bg-[#F6F5F8] rounded-lg w-10/12">
+                        <div id="dash-stats" class="grid grid-cols-[1.5fr_1.5fr_1fr_1fr_1fr] gap-x-4 w-full">
 
-        </aside>
+                            <div id="dashboard__total"
+                                class="w-full p-5 min-h-35 rounded-lg shadow-[0_0_10px_rgba(0,0,0,0.15)] bg-linear-to-b from-indigo-800 to-indigo-500 cursor-pointer hover:opacity-90">
+                                <div class="flex items-center gap-4 mb-4 text-white">
+                                    <svg xmlns="http://www.w3.org/2000/svg"
+                                        class="w-10 p-1.5 bg-white rounded-lg fill-indigo-600"
+                                        viewBox="0 0 640 640"><!--!Font Awesome Free v7.3.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2026 Fonticons, Inc.-->
+                                        <path
+                                            d="M304 112L192 112C183.2 112 176 119.2 176 128L176 512C176 520.8 183.2 528 192 528L448 528C456.8 528 464 520.8 464 512L464 272L376 272C336.2 272 304 239.8 304 200L304 112zM444.1 224L352 131.9L352 200C352 213.3 362.7 224 376 224L444.1 224zM128 128C128 92.7 156.7 64 192 64L325.5 64C342.5 64 358.8 70.7 370.8 82.7L493.3 205.3C505.3 217.3 512 233.6 512 250.6L512 512C512 547.3 483.3 576 448 576L192 576C156.7 576 128 547.3 128 512L128 128z" />
+                                    </svg>
+                                    <h2 class="text-4xl font-bold">
+                                        9
+                                    </h2>
+                                </div>
+                                <div>
+                                    <h3 class="text-white">
+                                        Total Applications
+                                    </h3>
+                                </div>
+                            </div>
+
+                            <div id="dashboard__applied"
+                                class="w-full p-5 min-h-35 rounded-lg shadow-[0_0_10px_rgba(0,0,0,0.15)] cursor-pointer hover:bg-slate-500/5">
+                                <div class="flex items-center gap-4 mb-2">
+                                    <svg xmlns="http://www.w3.org/2000/svg"
+                                        class="w-10 p-1.5 bg-blue-600 rounded-lg fill-white"
+                                        viewBox="0 0 640 640"><!--!Font Awesome Free v7.3.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2026 Fonticons, Inc.-->
+                                        <path
+                                            d="M322.5 351.7L523.4 150.9L391 520.3L322.5 351.7zM489.4 117L288.6 317.8L120 249.3L489.4 117zM70.1 280.8L275.9 364.4L359.5 570.2C364.8 583.3 377.6 591.9 391.8 591.9C406.5 591.9 419.6 582.7 424.6 568.8L602.6 72C606.1 62.2 603.6 51.4 596.3 44C589 36.6 578.1 34.2 568.3 37.7L71.4 215.7C57.5 220.7 48.3 233.8 48.3 248.5C48.3 262.7 56.9 275.5 70 280.8z" />
+                                    </svg>
+                                    <h2 class="text-4xl font-bold">
+                                        23
+                                    </h2>
+                                </div>
+                                <div>
+                                    <h3>
+                                        Applied
+                                    </h3>
+                                    <p class="text-xs text-blue-600 wrap-break-word">
+                                        <span>55.3</span>% of Total
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div id="dashboard__interviewed"
+                                class="w-full p-5 min-h-35 rounded-lg shadow-[0_0_10px_rgba(0,0,0,0.15)] cursor-pointer hover:bg-slate-500/5">
+                                <div class="flex items-center gap-4 mb-2">
+                                    <svg xmlns="http://www.w3.org/2000/svg"
+                                        class="w-10 p-1.5 rounded-lg bg-amber-600 fill-white"
+                                        viewBox="0 0 640 640"><!--!Font Awesome Free v7.3.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2026 Fonticons, Inc.-->
+                                        <path
+                                            d="M96 192C96 130.1 146.1 80 208 80C269.9 80 320 130.1 320 192C320 253.9 269.9 304 208 304C146.1 304 96 253.9 96 192zM32 528C32 430.8 110.8 352 208 352C305.2 352 384 430.8 384 528L384 534C384 557.2 365.2 576 342 576L74 576C50.8 576 32 557.2 32 534L32 528zM464 128C517 128 560 171 560 224C560 277 517 320 464 320C411 320 368 277 368 224C368 171 411 128 464 128zM464 368C543.5 368 608 432.5 608 512L608 534.4C608 557.4 589.4 576 566.4 576L421.6 576C428.2 563.5 432 549.2 432 534L432 528C432 476.5 414.6 429.1 385.5 391.3C408.1 376.6 435.1 368 464 368z" />
+                                    </svg>
+                                    <h2 class="text-4xl font-bold">
+                                        9
+                                    </h2>
+                                </div>
+                                <div>
+                                    <h3>
+                                        Interviewed
+                                    </h3>
+                                    <p class="text-xs text-amber-600 wrap-break-word">
+                                        <span>23.7</span>% of Total
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div id="dashboard__offered"
+                                class="w-full p-5 min-h-35 rounded-lg shadow-[0_0_10px_rgba(0,0,0,0.15)] cursor-pointer hover:bg-slate-500/5">
+                                <div class="flex items-center gap-4 mb-2">
+                                    <svg xmlns="http://www.w3.org/2000/svg"
+                                        class="w-10 p-1.5 bg-green-600 rounded-lg fill-white"
+                                        viewBox="0 0 640 640"><!--!Font Awesome Free v7.3.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2026 Fonticons, Inc.-->
+                                        <path
+                                            d="M530.8 134.1C545.1 144.5 548.3 164.5 537.9 178.8L281.9 530.8C276.4 538.4 267.9 543.1 258.5 543.9C249.1 544.7 240 541.2 233.4 534.6L105.4 406.6C92.9 394.1 92.9 373.8 105.4 361.3C117.9 348.8 138.2 348.8 150.7 361.3L252.2 462.8L486.2 141.1C496.6 126.8 516.6 123.6 530.9 134z" />
+                                    </svg>
+                                    <h2 class="text-4xl font-bold">
+                                        2
+                                    </h2>
+                                </div>
+                                <div>
+                                    <h3>
+                                        Offers
+                                    </h3>
+                                    <p class="text-xs text-green-600 wrap-break-word">
+                                        <span>5.3</span>% of Total
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div id="dashboard__rejected"
+                                class="w-full p-5 min-h-35 rounded-lg shadow-[0_0_10px_rgba(0,0,0,0.15)] cursor-pointer hover:bg-slate-500/5">
+                                <div class="flex items-center gap-4 mb-2">
+                                    <svg xmlns="http://www.w3.org/2000/svg"
+                                        class="w-10 p-1.5 bg-red-600 rounded-lg fill-white"
+                                        viewBox="0 0 640 640"><!--!Font Awesome Free v7.3.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2026 Fonticons, Inc.-->
+                                        <path
+                                            d="M504.6 148.5C515.9 134.9 514.1 114.7 500.5 103.4C486.9 92.1 466.7 93.9 455.4 107.5L320 270L184.6 107.5C173.3 93.9 153.1 92.1 139.5 103.4C125.9 114.7 124.1 134.9 135.4 148.5L278.3 320L135.4 491.5C124.1 505.1 125.9 525.3 139.5 536.6C153.1 547.9 173.3 546.1 184.6 532.5L320 370L455.4 532.5C466.7 546.1 486.9 547.9 500.5 536.6C514.1 525.3 515.9 505.1 504.6 491.5L361.7 320L504.6 148.5z" />
+                                    </svg>
+                                    <h2 class="text-4xl font-bold">
+                                        6
+                                    </h2>
+                                </div>
+
+                                <div>
+                                    <h3>
+                                        Rejected
+                                    </h3>
+                                    <p class="text-xs text-red-600 wrap-break-word">
+                                        <span>15.7</span>% of Total
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="dash-charts" class="grid w-full min-w-0 grid-cols-2 gap-5">
+
+                            <div class="min-w-0 rounded-lg bg-white p-5 shadow-[0_0_10px_rgba(0,0,0,0.15)]">
+                                <h2>Jobs by Status</h2>
+
+                                <div class="relative w-full min-w-0 h-50">
+                                    <canvas id="status-chart"></canvas>
+                                </div>
+                            </div>
+
+                            <div class="min-w-0 rounded-lg bg-white p-5 shadow-[0_0_10px_rgba(0,0,0,0.15)]">
+                                <h2>Applications Over Time</h2>
+
+                                <div class="relative w-full min-w-0 h-50">
+                                    <canvas id="applications-chart"></canvas>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div id="job-filter" class="flex w-10/12 p-2 text-sm text-white/80 gap-x-2">
+                        <input id="search"
+                            class="p-2 border rounded-lg focus:border-indigo-600 bg-white/10 border-white/30 focus:outline-indigo-600 focus:outline-2 placeholder:text-white/80"
+                            type="search" placeholder="Search jobs...">
+                        <select
+                            class="p-2 border rounded-lg border-white/30 bg-white/10 focus:outline-indigo-600 focus:outline-2"
+                            id="rating-filter">
+                            <option class="bg-slate-900" value="all" selected>Rating (All)</option>
+                            <option class="bg-slate-900" value="5">&starf; &starf; &starf; &starf; &starf;</option>
+                            <option class="bg-slate-900" value="4">&starf; &starf; &starf; &starf;</option>
+                            <option class="bg-slate-900" value="3">&starf; &starf; &starf;</option>
+                            <option class="bg-slate-900" value="2">&starf; &starf;</option>
+                            <option class="bg-slate-900" value="1">&starf;</option>
+                        </select>
+                        <select
+                            class="p-2 border rounded-lg border-white/30 bg-white/10 focus:outline-indigo-600 focus:outline-2"
+                            id="date-filter">
+                            <option class="bg-slate-900" value="all" selected>Date (All time)</option>
+                            <option class="bg-slate-900" value="week">Past Week</option>
+                            <option class="bg-slate-900" value="month">Past Month</option>
+                            <option class="bg-slate-900" value="threeMonth">Past 3 Months</option>
+                        </select>
+                        <div class="flex items-center gap-2 ml-auto">
+                            <span>Sort by</span>
+                            <select
+                                class="p-2 border rounded-lg border-white/30 bg-white/10 focus:outline-indigo-600 focus:outline-2"
+                                id="sort-filter">
+                                <option class="bg-slate-900" value="newest" selected>Newest</option>
+                                <option class="bg-slate-900" value="oldest">Oldest</option>
+                                <option class="bg-slate-900" value="highestRated">Highest Rated</option>
+                                <option class="bg-slate-900" value="lowestrated">Lowest Rated</option>
+                                <option class="bg-slate-900" value="a-z">Company: A-Z</option>
+                                <option class="bg-slate-900" value="z-a">Company: Z-A</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div id="kanban-board"
+                        class="flex items-center min-w-fit w-10/12 gap-2 p-5 bg-[#F6F5F8] rounded-lg h-100">
+                        <section id="applied-section"
+                            class="flex-1 h-full border-t-4 rounded-lg shadow-[0_0_10px_rgba(0,0,0,0.15)] border-t-blue-500 bg-gray-100">
+                            <div id="applied"
+                                class="flex flex-col items-center h-full gap-2 p-2 overflow-y-auto [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:bg-transparent">
+                                <div class="flex items-center w-full gap-2 text-left">
+                                    <h2 class="font-bold">Applied</h2><span id="kanban-applied-number"
+                                        class="text-sm text-center text-blue-500 bg-blue-100 rounded-full min-h-5 min-w-5"></span>
+                                </div>
+                                <div id="applied__content" class="w-full">
+
+                                </div>
+                            </div>
+                        </section>
+                        <section id="interview-section"
+                            class="flex-1 h-full border border-t-4 rounded-lg shadow-[0_0_10px_rgba(0,0,0,0.15)] border-black/10 border-t-orange-500">
+                            <div id="interviewed"
+                                class="flex flex-col items-center h-full gap-2 p-2 overflow-y-auto  [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:bg-transparent">
+                                <div class="flex items-center w-full gap-2 text-left">
+                                    <h2 class="font-bold">Interview</h2><span id="kanban-interviewed-number"
+                                        class="text-sm text-center text-orange-500 bg-orange-100 rounded-full min-h-5 min-w-5"></span>
+                                </div>
+                                <div id="interviewed__content" class="w-full">
+
+                                </div>
+                            </div>
+                        </section>
+                        <section id="offered-section"
+                            class="flex-1 h-full border border-t-4 rounded-lg shadow-[0_0_10px_rgba(0,0,0,0.15)] border-black/10 border-t-green-500">
+                            <div id="offered"
+                                class="flex flex-col items-center h-full gap-2 p-2 overflow-y-auto [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:bg-transparent">
+                                <div class="flex items-center w-full gap-2 text-left">
+                                    <h2 class="font-bold">Offered</h2><span id="kanban-offered-number"
+                                        class="text-sm text-center text-green-500 bg-green-100 rounded-full min-h-5 min-w-5"></span>
+                                </div>
+                                <div id="offered__content" class="w-full">
+
+                                </div>
+                            </div>
+                        </section>
+                        <section id="rejected-section"
+                            class="flex-1 h-full border border-t-4 rounded-lg shadow-[0_0_10px_rgba(0,0,0,0.15)] border-black/10 border-t-red-500">
+                            <div id="rejected"
+                                class="w-full flex flex-col items-center h-full gap-2 p-2 overflow-y-auto  [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:bg-transparent">
+                                <div class="flex items-center w-full gap-2 text-left">
+                                    <h2 class="font-bold">Rejected</h2><span id="kanban-rejected-number"
+                                        class="text-sm text-center text-red-500 bg-red-100 rounded-full min-h-5 min-w-5"></span>
+                                </div>
+                                <div id="rejected__content" class="w-full">
+
+                                </div>
+                            </div>
+                        </section>
+                    </div>
+                </main>
+                <aside id="job-side-area"
+                    class="w-[25vw] h-screen p-10 bg-white/5 border border-l-white/20 hidden overflow-auto sticky top-0">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="flex flex-col items-left">
+                            <h2 id="job-side__title" class="font-bold text-white">Software Developer</h2>
+                            <p id="job-side__company" class="text-sm font-light text-white/80">BAE Systems</p>
+                        </div>
+                        <button id="job-side-close-button" class="self-start text-lg font-bold cursor-pointer">
+                            <svg xmlns="http://www.w3.org/2000/svg"
+                                class="w-5 h-5 fill-white font hover:fill-indigo-600"
+                                viewBox="0 0 640 640"><!--!Font Awesome Free v7.3.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2026 Fonticons, Inc.-->
+                                <path
+                                    d="M183.1 137.4C170.6 124.9 150.3 124.9 137.8 137.4C125.3 149.9 125.3 170.2 137.8 182.7L275.2 320L137.9 457.4C125.4 469.9 125.4 490.2 137.9 502.7C150.4 515.2 170.7 515.2 183.2 502.7L320.5 365.3L457.9 502.6C470.4 515.1 490.7 515.1 503.2 502.6C515.7 490.1 515.7 469.8 503.2 457.3L365.8 320L503.1 182.6C515.6 170.1 515.6 149.8 503.1 137.3C490.6 124.8 470.3 124.8 457.8 137.3L320.5 274.7L183.1 137.4z" />
+                            </svg>
+                        </button>
+                    </div>
+                    <div
+                        class="flex items-center justify-between p-2 text-[0.6rem] text-white border rounded-lg h-15 border-white/10">
+                        <button id="job-side__open"
+                            class="flex-1 border-r cursor-pointer hover:text-indigo-600 border-r-white/10">
+                            <a class="flex flex-col items-center" href="" target="_blank">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 fill-current"
+                                    viewBox="0 0 640 640"><!--!Font Awesome Free v7.3.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2026 Fonticons, Inc.-->
+                                    <path
+                                        d="M415.9 344L225 344C227.9 408.5 242.2 467.9 262.5 511.4C273.9 535.9 286.2 553.2 297.6 563.8C308.8 574.3 316.5 576 320.5 576C324.5 576 332.2 574.3 343.4 563.8C354.8 553.2 367.1 535.8 378.5 511.4C398.8 467.9 413.1 408.5 416 344zM224.9 296L415.8 296C413 231.5 398.7 172.1 378.4 128.6C367 104.2 354.7 86.8 343.3 76.2C332.1 65.7 324.4 64 320.4 64C316.4 64 308.7 65.7 297.5 76.2C286.1 86.8 273.8 104.2 262.4 128.6C242.1 172.1 227.8 231.5 224.9 296zM176.9 296C180.4 210.4 202.5 130.9 234.8 78.7C142.7 111.3 74.9 195.2 65.5 296L176.9 296zM65.5 344C74.9 444.8 142.7 528.7 234.8 561.3C202.5 509.1 180.4 429.6 176.9 344L65.5 344zM463.9 344C460.4 429.6 438.3 509.1 406 561.3C498.1 528.6 565.9 444.8 575.3 344L463.9 344zM575.3 296C565.9 195.2 498.1 111.3 406 78.7C438.3 130.9 460.4 210.4 463.9 296L575.3 296z" />
+                                </svg>
+                                <span>
+                                    Website
+                                </span>
+                            </a>
+                        </button>
+                        <button id="job-side__edit"
+                            class="flex flex-col items-center flex-1 border-r cursor-pointer border-r-white/10 hover:text-green-600">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 fill-current"
+                                viewBox="0 0 640 640"><!--!Font Awesome Free v7.3.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2026 Fonticons, Inc.-->
+                                <path
+                                    d="M100.4 417.2C104.5 402.6 112.2 389.3 123 378.5L304.2 197.3L338.1 163.4C354.7 180 389.4 214.7 442.1 267.4L476 301.3L442.1 335.2L260.9 516.4C250.2 527.1 236.8 534.9 222.2 539L94.4 574.6C86.1 576.9 77.1 574.6 71 568.4C64.9 562.2 62.6 553.3 64.9 545L100.4 417.2zM156 413.5C151.6 418.2 148.4 423.9 146.7 430.1L122.6 517L209.5 492.9C215.9 491.1 221.7 487.8 226.5 483.2L155.9 413.5zM510 267.4C493.4 250.8 458.7 216.1 406 163.4L372 129.5C398.5 103 413.4 88.1 416.9 84.6C430.4 71 448.8 63.4 468 63.4C487.2 63.4 505.6 71 519.1 84.6L554.8 120.3C568.4 133.9 576 152.3 576 171.4C576 190.5 568.4 209 554.8 222.5C551.3 226 536.4 240.9 509.9 267.4z" />
+                            </svg>
+                            <span>
+                                Edit
+                            </span>
+                        </button>
+                        <button id="job-side__delete"
+                            class="flex flex-col items-center flex-1 cursor-pointer hover:text-red-600">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 fill-current"
+                                viewBox="0 0 640 640"><!--!Font Awesome Free v7.3.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2026 Fonticons, Inc.-->
+                                <path
+                                    d="M232.7 69.9L224 96L128 96C110.3 96 96 110.3 96 128C96 145.7 110.3 160 128 160L512 160C529.7 160 544 145.7 544 128C544 110.3 529.7 96 512 96L416 96L407.3 69.9C402.9 56.8 390.7 48 376.9 48L263.1 48C249.3 48 237.1 56.8 232.7 69.9zM512 208L128 208L149.1 531.1C150.7 556.4 171.7 576 197 576L443 576C468.3 576 489.3 556.4 490.9 531.1L512 208z" />
+                            </svg>
+                            <span>
+                                Delete
+                            </span>
+                        </button>
+                    </div>
+                    <div class="grid grid-cols-2 mt-4 text-xs text-white gap-y-2">
+                        <p class="font-bold">Location</p>
+                        <p id="job-side__location" class="text-right"></p>
+                        <p class="font-bold">Data Applied</p>
+                        <p id="job-side__applied-date" class="text-right"></p>
+                        <p class="font-bold">Status</p>
+                        <p id="job-side__status" class="text-right"></p>
+                        <p class="font-bold">Rating</p>
+                        <p id="job-side__rating" class="text-right text-amber-500"></p>
+                        <p class="mt-2 font-bold">Notes</p>
+                        <p id="job-side__notes"
+                            class="p-4 border rounded-lg col-span-full border-white/10 text-[0.7rem]">
+                        </p>
+                    </div>
+
+                    <div id="timeline-section">
+                        <h3 class="p-2 mb-4 font-bold text-white border-b border-b-white/10">Timeline</h3>
+                    </div>
+
+                </aside>
+            </div>
+        </div>
     </div>
 
     <!--Modal-->
@@ -296,7 +397,7 @@
                 </div>
                 <button id="modal-close-button"
                     class="text-lg font-bold text-gray-400 bg-transparent cursor-pointer hover:text-indigo-800">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 fill font hover:fill-indigo-600"
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 hover:fill-indigo-600"
                         viewBox="0 0 640 640"><!--!Font Awesome Free v7.3.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2026 Fonticons, Inc.-->
                         <path
                             d="M183.1 137.4C170.6 124.9 150.3 124.9 137.8 137.4C125.3 149.9 125.3 170.2 137.8 182.7L275.2 320L137.9 457.4C125.4 469.9 125.4 490.2 137.9 502.7C150.4 515.2 170.7 515.2 183.2 502.7L320.5 365.3L457.9 502.6C470.4 515.1 490.7 515.1 503.2 502.6C515.7 490.1 515.7 469.8 503.2 457.3L365.8 320L503.1 182.6C515.6 170.1 515.6 149.8 503.1 137.3C490.6 124.8 470.3 124.8 457.8 137.3L320.5 274.7L183.1 137.4z" />
@@ -306,63 +407,63 @@
             <form id="application-form" class="grid w-full grid-cols-2 mt-6 gap-x-10 gap-y-4">
 
                 <div class="flex flex-col w-full">
-                    <label class="text-xs" for="">Title <span class="text-red-600">*</span></label>
+                    <label class="text-xs" for="title">Title <span class="text-red-600">*</span></label>
                     <input id="title"
                         class="p-2 text-xs border rounded-sm placeholder:text-gray-500 border-gray-950/30 focus:outline-indigo-600"
                         type="text" placeholder="Enter Title" required>
                 </div>
 
                 <div class="flex flex-col w-full">
-                    <label class="text-xs" for="">Company <span class="text-red-600">*</span></label>
+                    <label class="text-xs" for="company">Company <span class="text-red-600">*</span></label>
                     <input id="company"
                         class="p-2 text-xs border rounded-sm placeholder:text-gray-500 border-gray-950/30 focus:outline-indigo-600"
                         type="text" placeholder="Enter Company" required>
                 </div>
 
                 <div class="flex flex-col w-full">
-                    <label class="text-xs" for="">Location <span class="text-red-600">*</span></label>
+                    <label class="text-xs" for="location">Location <span class="text-red-600">*</span></label>
                     <input id="location"
                         class="p-2 text-xs border rounded-sm placeholder:text-gray-500 border-gray-950/30 focus:outline-indigo-600"
                         type="text" placeholder="Enter Location" required>
                 </div>
 
                 <div class="flex flex-col w-full">
-                    <label class="text-xs" for="">Date Applied <span class="text-red-600">*</span></label>
-                    <input id="data-applied"
+                    <label class="text-xs" for="date-applied">Date Applied <span class="text-red-600">*</span></label>
+                    <input id="date-applied"
                         class="p-2 text-xs text-gray-500 border rounded-sm border-gray-950/30 focus:outline-indigo-600"
                         type="date" required>
                 </div>
 
                 <div class="flex flex-col w-full">
-                    <label class="text-xs" for="">URL <span class="text-red-600">*</span></label>
+                    <label class="text-xs" for="url">URL <span class="text-red-600">*</span></label>
                     <input id="url"
                         class="p-2 text-xs border rounded-sm placeholder:text-gray-500 border-gray-950/30 focus:outline-indigo-600"
                         type="text" placeholder="Enter URL" required>
                 </div>
 
                 <div class="flex flex-col w-full">
-                    <label class="text-xs" for="">Date interviewed (optional)</label>
+                    <label class="text-xs" for="date-interviewed">Date interviewed (optional)</label>
                     <input id="date-interviewed"
                         class="p-2 text-xs text-gray-500 border rounded-sm border-gray-950/30 focus:outline-indigo-600"
                         type="date">
                 </div>
 
                 <div class="flex flex-col w-full">
-                    <label class="text-xs" for="">Date Offered (optional)</label>
+                    <label class="text-xs" for="date-offered">Date Offered (optional)</label>
                     <input id="date-offered"
                         class="p-2 text-xs text-gray-500 border rounded-sm border-gray-950/30 focus:outline-indigo-600"
                         type="date">
                 </div>
 
                 <div class="flex flex-col w-full">
-                    <label class="text-xs" for="">Date Rejected (optional)</label>
-                    <input id="data-rejected"
+                    <label class="text-xs" for="date-rejected">Date Rejected (optional)</label>
+                    <input id="date-rejected"
                         class="p-2 text-xs text-gray-500 border rounded-sm border-gray-950/30 focus:outline-indigo-600"
                         type="date">
                 </div>
 
                 <div class="flex flex-col w-full">
-                    <label class="text-xs" for="">Job Status</label>
+                    <label class="text-xs" for="job-status">Job Status</label>
                     <select id="job-status"
                         class="p-2 text-xs text-gray-500 border rounded-sm border-gray-950/30 focus:outline-indigo-600"
                         required>
