@@ -82,7 +82,6 @@ const ratingFilterInput =
 const dateFilterInput =
   document.querySelector<HTMLSelectElement>("#date-filter")!;
 const sortByInput = document.querySelector<HTMLSelectElement>("#sort-filter")!;
-
 const dashboard = document.getElementById("dashboard") as HTMLDivElement;
 // Dashboard stats
 const dashboardTotalNum = document.querySelector<HTMLDivElement>(
@@ -154,12 +153,39 @@ function DeleteJob(job: job): void {
 
 // utlity functions
 
-function calculateDateFilter(jobs: job[]) {
-  const now = new Date().getTime();
-}
+function calculateDateFilter(): Date | null {
+  const now = new Date();
 
+  switch (dateFilterInput.value) {
+    case "week": {
+      const date = new Date(now);
+      date.setDate(date.getDate() - 7);
+      return date;
+    }
+
+    case "month": {
+      const date = new Date(now);
+      date.setMonth(date.getMonth() - 1);
+      return date;
+    }
+
+    case "3-months": {
+      const date = new Date(now);
+      date.setMonth(date.getMonth() - 3);
+      return date;
+    }
+
+    case "all":
+      return null;
+
+    default:
+      return null;
+  }
+}
 function applyFilters() {
   const searchValue = searchBarInput.value.toLowerCase();
+  const cutoffDate = calculateDateFilter();
+
 
   filteredJobs = jobs
     .filter((job) => {
@@ -172,12 +198,13 @@ function applyFilters() {
         ratingFilterInput.value === "all" ||
         job.rating === Number(ratingFilterInput.value);
 
-      // const dateFilter = job;
+      const dateFilter =
+        cutoffDate === null || new Date(job.appliedDate) >= cutoffDate;
 
       console.log(ratingFilterInput.value);
       console.log(job.rating);
 
-      return searchFilter && ratingFilter;
+      return searchFilter && ratingFilter && dateFilter;
     })
     .sort((a: job, b: job) => {
       switch (sortByInput.value) {
@@ -196,7 +223,7 @@ function applyFilters() {
         case "highestRated":
           return b.rating - a.rating;
 
-        case "lowedtRated":
+        case "lowestRated":
           return a.rating - b.rating;
 
         case "a-z":
@@ -211,6 +238,7 @@ function applyFilters() {
     });
 
   renderJobs(filteredJobs);
+  updateKanbanCounts();
 }
 
 // Rendering UI Functions
@@ -252,7 +280,7 @@ function updateKanbanCounts() {
     "#kanban-rejected-number",
   );
 
-  const jobStats = getJobStats(jobs);
+  const jobStats = getJobStats(filteredJobs);
 
   appliedCount!.textContent = String(jobStats.appliedNum);
   interviewedCount!.textContent = String(jobStats.interviewedNum);
@@ -610,13 +638,6 @@ function updateStarUI(id: number, state: starState) {
 }
 
 function renderJobs(jobArray: job[]) {
-  console.log("JOBS TO RENDER:", jobArray);
-  console.log("NUMBER:", jobArray.length);
-  console.log(
-    "IDS:",
-    jobArray.map((job) => job.id),
-  );
-
   interviewedContentArea.innerHTML = "";
   appliedContentArea.innerHTML = "";
   offeredContentArea.innerHTML = "";
@@ -628,9 +649,8 @@ function renderJobs(jobArray: job[]) {
 }
 
 function startApp(): void {
-  renderJobs(jobs);
+  applyFilters();
   updateDashboardCharts();
-  updateKanbanCounts();
   updateDashboardCounts();
 }
 
@@ -746,8 +766,7 @@ function handleApplicationSubmit(event: SubmitEvent) {
 
     jobs.push(newJob);
 
-    createJobCard(newJob, findBoard(newJob.status));
-    console.log(newJob);
+    applyFilters();
   } else {
     const currentJob = jobs.find((job) => job.id === editExistingJobId)!;
     currentJob.title = title.value;
@@ -762,34 +781,29 @@ function handleApplicationSubmit(event: SubmitEvent) {
     currentJob.notes = notes.value;
     currentJob.rating = clickedRating;
 
-    RemoveJobCardFromUI(editExistingJobId);
+    applyFilters();
 
-    createJobCard(currentJob, findBoard(currentJob.status));
     updateJobSideArea(currentJob);
 
     editExistingJobId = null;
   }
 
   updateDashboardCharts();
-  updateKanbanCounts();
   updateDashboardCounts();
   closeModal();
 }
 
 function addJob(
   event: DragEvent,
-  board: HTMLDivElement,
   status: JobStatus,
 ): void {
   const id = event.dataTransfer?.getData("text/plain")!;
-  const job = document.getElementById(id) as HTMLDivElement;
-  board.prepend(job);
-
   // update array
   const currentJob = jobs.find((job) => job.id === id)!;
   currentJob!.status = status;
 
-  updateKanbanCounts();
+  applyFilters();
+
   updateDashboardCharts();
   updateDashboardCounts();
   closeJobSide();
@@ -850,7 +864,7 @@ interviewedBoard.addEventListener("dragover", (e) => {
 });
 
 interviewedBoard.addEventListener("drop", (event: DragEvent) => {
-  addJob(event, interviewedContentArea, JobStatus.interviewed);
+  addJob(event, JobStatus.interviewed);
 });
 
 appliedBoard.addEventListener("dragover", (e) => {
@@ -858,7 +872,7 @@ appliedBoard.addEventListener("dragover", (e) => {
 });
 
 appliedBoard.addEventListener("drop", (event: DragEvent) => {
-  addJob(event, appliedContentArea, JobStatus.applied);
+  addJob(event, JobStatus.applied);
 });
 
 offeredBoard.addEventListener("dragover", (event: DragEvent) => {
@@ -866,7 +880,7 @@ offeredBoard.addEventListener("dragover", (event: DragEvent) => {
 });
 
 offeredBoard.addEventListener("drop", (event: DragEvent) => {
-  addJob(event, offeredContentArea, JobStatus.offered);
+  addJob(event, JobStatus.offered);
 });
 
 rejectedBoard.addEventListener("dragover", (event: DragEvent) => {
@@ -874,10 +888,10 @@ rejectedBoard.addEventListener("dragover", (event: DragEvent) => {
 });
 
 rejectedBoard.addEventListener("drop", (event: DragEvent) => {
-  addJob(event, rejectedContentArea, JobStatus.rejected);
+  addJob(event, JobStatus.rejected);
 });
 
-// event Listners
+// event Listeners
 
 applicaitonButton.addEventListener("click", openModal);
 modalClose.addEventListener("click", closeModal);
@@ -891,7 +905,6 @@ jobSideEditButton.addEventListener("click", () => {
 });
 jobSideDeleteButton.addEventListener("click", () => {
   if (!selectedSideJob) return;
-  console.log("DELETE CLICKED");
   DeleteJob(selectedSideJob);
   closeJobSide();
   updateDashboardCharts();
@@ -902,14 +915,14 @@ jobSideDeleteButton.addEventListener("click", () => {
 
 searchBarInput.addEventListener("input", applyFilters);
 ratingFilterInput.addEventListener("change", applyFilters);
-// dateFilterInput.addEventListener("change", applyFilters);
+dateFilterInput.addEventListener("change", applyFilters);
 sortByInput.addEventListener("change", applyFilters);
+
 sideMenuIcon.addEventListener("click", handleOpeningSideMenu);
 sideMenuCloseButton.addEventListener("click", handleClosingSideMenu);
 sideMenuOverlay.addEventListener("click", handleClosingSideMenu);
 sideMenu.addEventListener("click", (event: PointerEvent) => {
   event.stopPropagation();
 });
-
 
 startApp();
