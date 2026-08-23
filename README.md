@@ -43,7 +43,7 @@ The project was built to practise and demonstrate practical frontend development
 
 ### Dashboard and Kanban board
 
-![Job Tracker Dashboard and kanban board](screenshots/full.png)
+![Job Tracker Dashboard and kanban board](screenshots/full.jpeg)
 
 ### Add Application
 
