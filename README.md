@@ -56,7 +56,7 @@ Applications can be created, edited, searched, filtered, sorted and moved betwee
 | **TypeScript** | Typed application logic, interfaces, enums and type safety |
 | **Tailwind CSS** | Responsive styling, layout and UI design |
 | **Vite** | Development environment and production build tooling |
-| **Chart.js** | Dashboard data visualisation |
+| **Chart.js** | Dashboard graph visualisation |
 | **HTML5** | Application structure and semantic markup |
 | **Web APIs** | Drag and drop, DOM manipulation and browser interactions |
 
