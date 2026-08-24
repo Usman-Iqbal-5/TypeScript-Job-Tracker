@@ -1,39 +1,31 @@
 # 💼 Job Tracker
 
-A responsive job tracking application built with **TypeScript, Tailwind CSS and Vite**.
+A job application tracker built with **TypeScript, Tailwind CSS and Vite**.
 
-The application provides a Kanban board for managing job applications through different recruitment stages, with search, filtering, sorting, drag and drop, and dashboard analytics.
+The application uses a Kanban board to manage applications through four stages: **Applied, Interviewed, Offered and Rejected**.
 
-Applications can be created, edited, searched, filtered, sorted and moved between recruitment stages through drag and drop. A dedicated dashboard provides application statistics and Chart.js visualisations.
+Applications can be added, edited, searched, filtered, sorted and moved between stages using drag and drop. The dashboard provides an overview of applications with statistics and charts.
 
 ## ✨ Features
 
-- 📌 **Kanban workflow** across four recruitment stages:
-  - Applied
-  - Interviewed
-  - Offered
-  - Rejected
-- 🖱️ **Drag and drop** applications between recruitment stages
-- ➕ Create and edit applications through modal forms
-- 📄 Detailed job information side panel
-- 🔎 Search across job title, company and notes
-- ⭐ Interactive five-star rating system
-- 📅 Filter applications by date:
-  - All
-  - Past week
-  - Past month
-  - Past 3 months
-- ↕️ Sort applications by:
+- 📌 Kanban board with four application stages
+- 🖱️ Drag and drop between stages
+- ➕ Add and edit applications
+- 📄 View detailed job information
+- 🔎 Search by job title, company and notes
+- ⭐ Five-star application ratings
+- 📅 Filter by application date
+- ↕️ Sort by:
   - Newest
   - Oldest
   - Highest rated
   - Lowest rated
   - Company A–Z
   - Company Z–A
-- 📊 Dashboard application statistics
-- 📈 Application status visualisations using Chart.js
+- 📊 Application statistics
+- 📈 Application status charts
 - ✅ Client-side form validation
-- 📱 Responsive interface
+- 📱 Responsive layout
 
 ## 🖼️ Screenshots
 
@@ -51,75 +43,65 @@ Applications can be created, edited, searched, filtered, sorted and moved betwee
 
 ## 🛠️ Technologies
 
-| Technology | Purpose |
+| Technology | Use |
 |---|---|
-| **TypeScript** | Typed application logic, interfaces, enums and type safety |
-| **Tailwind CSS** | Responsive styling, layout and UI design |
-| **Vite** | Development environment and production build tooling |
-| **Chart.js** | Dashboard graph visualisation |
-| **HTML5** | Application structure and semantic markup |
-| **Web APIs** | Drag and drop, DOM manipulation and browser interactions |
+| **TypeScript** | Application logic and type safety |
+| **Tailwind CSS** | Styling and responsive layouts |
+| **Vite** | Development and build tooling |
+| **Chart.js** | Dashboard charts |
+| **HTML5** | Application structure |
+| **Web APIs** | Drag and drop and DOM interaction |
 
 ## ⚙️ Technical Implementation
 
-### 🔄 Data-driven rendering
+### 🔄 Rendering
 
-The `jobs` collection acts as the **single source of truth** for application data.
+Job data is stored in the `jobs` collection and used to build the Kanban board.
 
-UI operations update the underlying application data before the interface is rendered. Rather than treating individual DOM elements as the source of application state, the Kanban board is generated from the current application data.
+`applyFilters()` handles searching, filtering and sorting. `renderJobs()` clears the Kanban columns and creates the cards for the jobs that should currently be displayed.
 
-Filtering and sorting are centralised in `applyFilters()`, while `renderJobs()` is responsible for rebuilding the visible Kanban cards.
+When a job is added, edited or moved, the job data is updated and the board is rendered again.
 
-This approach keeps application state independent from the DOM and ensures that filtering, sorting and drag-and-drop operations remain synchronised.
+### 🔎 Filtering and Sorting
 
-### 🔎 Filtering and sorting
+The application supports combining multiple filters:
 
-Search, rating and date criteria are combined during filtering before the resulting collection is sorted.
+- Search by title, company or notes
+- Filter by rating
+- Filter by application date
 
-The application supports multiple sorting strategies, including:
+Jobs can then be sorted by date, rating or company name.
 
-- Chronological ordering using application dates
-- Numeric ordering using application ratings
-- Alphabetical ordering using company names
+### 🖱️ Drag and Drop
 
-The filtering and sorting pipeline allows multiple criteria to be applied simultaneously while preserving the selected ordering.
+The Kanban board uses the **HTML5 Drag and Drop API**.
 
-### 🖱️ Drag and drop
+When a job is dropped into another column, its `status` is updated and the board is rendered again. This means the board continues to work correctly when filters or sorting are being used.
 
-The application uses the **HTML5 Drag and Drop API** to move applications between recruitment stages.
+### 📊 Dashboard
 
-A drop operation identifies the corresponding application and updates its `status` in the underlying data. The Kanban board is then rendered from the updated state.
+The dashboard displays the number of applications in each recruitment stage.
 
-This ensures that drag-and-drop operations remain compatible with the active search, filtering and sorting configuration.
+**Chart.js** is used to display application data as charts. Dashboard statistics and charts are updated whenever the job data changes.
 
-### 📊 Dashboard and data visualisation
+### 🧩 Code Structure
 
-Dashboard statistics are calculated directly from the application data.
+The application is split into separate modules for different parts of the application.
 
-**Chart.js** is used to visualise the distribution of applications across recruitment stages, while summary statistics provide an overview of the current application pipeline.
+Job types are kept in `types/job.ts`, dashboard functionality is handled in `dashboard.ts`, and reusable statistics functions are kept in `utils/jobStats.ts`.
 
-When application data changes, the dashboard is recalculated so that the statistics and visualisations remain synchronised with the Kanban board.
+This keeps the main application logic organised and makes individual parts easier to maintain.
 
-### 🧩 Modular application structure
+### 🎯 TypeScript
 
-Application functionality is separated across dedicated modules rather than being contained entirely within a single file.
+The application uses TypeScript interfaces and enums to define job data and application statuses.
 
-Type definitions, dashboard functionality, shared state and statistical utilities are maintained separately from the main application logic.
-
-This provides clear separation of responsibilities and makes individual parts of the application easier to maintain and extend.
-
-### 🎯 Typed application model
-
-The application's job data is represented using TypeScript interfaces and enums.
-
-The `job` interface defines the structure of application data, while the `JobStatus` enum provides a controlled set of valid recruitment stages.
-
-This provides compile-time type checking and helps maintain consistent application state throughout the application.
+The `job` interface defines the fields stored for each application, while `JobStatus` defines the available Kanban stages.
 
 ## 📁 Project Structure
 
 ```text
-job-tracker/
+TypeScript-Job-Tracker/
 ├── src/
 │   ├── types/
 │   │   └── job.ts
@@ -141,12 +123,12 @@ job-tracker/
 
 ## 🗂️ Code Organisation
 
-- **`src/types/job.ts`** — Defines the application's job interface and `JobStatus` enum.
-- **`src/utils/jobStats.ts`** — Contains reusable functions for calculating application and dashboard statistics.
-- **`src/app.ts`** — Handles core application functionality, including job creation, editing, filtering, sorting, rendering and drag-and-drop operations.
-- **`src/dashboard.ts`** — Handles dashboard statistics and Chart.js visualisations.
-- **`src/shared_states.ts`** — Provides shared application state between modules.
-- **`CSS/input.css`** — Tailwind CSS entry point and custom styling.
+- **`src/types/job.ts`** — Job interface and `JobStatus` enum.
+- **`src/utils/jobStats.ts`** — Functions used to calculate application statistics.
+- **`src/app.ts`** — Main application logic, including jobs, rendering, filtering, sorting and drag and drop.
+- **`src/dashboard.ts`** — Dashboard statistics and Chart.js charts.
+- **`src/shared_states.ts`** — Shared application state.
+- **`CSS/input.css`** — Tailwind CSS input file and custom CSS.
 
 ## 🚀 Getting Started
 
@@ -163,13 +145,13 @@ Clone the repository:
 git clone git@github.com:Usman-Iqbal-5/TypeScript-Job-Tracker.git
 ```
 
-Navigate to the project directory:
+Enter the project directory:
 
 ```bash
 cd TypeScript-Job-Tracker
 ```
 
-Install the project dependencies:
+Install the dependencies:
 
 ```bash
 npm install
@@ -181,35 +163,33 @@ Start the development server:
 npm run dev
 ```
 
-Open the local development URL provided by Vite.
+Vite will provide the local development URL.
 
 ### 📦 Production Build
 
-Create a production build with:
+Create a production build:
 
 ```bash
 npm run build
 ```
 
-## 💡 Engineering Highlights
+## 💡 Technical Highlights
 
-This project demonstrates experience with:
-
-- **TypeScript** and strongly typed application models
-- **Frontend state management** and data-driven rendering
-- **DOM manipulation** and dynamic UI generation
-- **Event-driven programming**
+- **TypeScript** application development
+- **Interfaces and enums** for typed data
+- **DOM manipulation** and dynamic rendering
+- **Event handling** and event delegation
 - **HTML5 Drag and Drop API**
-- **Array transformation and data processing**
-- **Filtering and sorting logic**
-- **Responsive interface development**
+- **Filtering and sorting** of application data
+- **Client-side state management**
+- **Responsive UI development**
 - **Tailwind CSS**
-- **Chart.js data visualisation**
-- **Modular TypeScript architecture**
-- **Vite development and build tooling**
+- **Chart.js**
+- **Modular code structure**
+- **Vite**
 
 ## 👨‍💻 Author
 
 **Usman Iqbal**
 
-Full-stack developer experienced in building maintainable web applications across the frontend and backend using **TypeScript, JavaScript, React, Node.js, Express and modern web technologies**.
+Full-stack developer experienced in building web applications across the frontend and backend using **TypeScript, JavaScript, React, Node.js, Express and modern web technologies**.
