@@ -54,7 +54,7 @@ Applications can be added, edited, searched, filtered, sorted and moved between 
 
 ## ⚙️ Technical Implementation
 
-### 🔄 Rendering
+### Rendering
 
 Job data is stored in the `jobs` collection and used to build the Kanban board.
 
@@ -62,7 +62,7 @@ Job data is stored in the `jobs` collection and used to build the Kanban board.
 
 When a job is added, edited or moved, the job data is updated and the board is rendered again.
 
-### 🔎 Filtering and Sorting
+### Filtering and Sorting
 
 The application supports combining multiple filters:
 
@@ -72,19 +72,19 @@ The application supports combining multiple filters:
 
 Jobs can then be sorted by date, rating or company name.
 
-### 🖱️ Drag and Drop
+### Drag and Drop
 
 The Kanban board uses the **HTML5 Drag and Drop API**.
 
 When a job is dropped into another column, its `status` is updated and the board is rendered again. This means the board continues to work correctly when filters or sorting are being used.
 
-### 📊 Dashboard
+### Dashboard
 
 The dashboard displays the number of applications in each recruitment stage.
 
 **Chart.js** is used to display application data as charts. Dashboard statistics and charts are updated whenever the job data changes.
 
-### 🧩 Code Structure
+### Code Structure
 
 The application is split into separate modules for different parts of the application.
 
@@ -92,7 +92,7 @@ Job types are kept in `types/job.ts`, dashboard functionality is handled in `das
 
 This keeps the main application logic organised and makes individual parts easier to maintain.
 
-### 🎯 TypeScript
+### TypeScript
 
 The application uses TypeScript interfaces and enums to define job data and application statuses.
 
@@ -132,12 +132,12 @@ TypeScript-Job-Tracker/
 
 ## 🚀 Getting Started
 
-### 📋 Prerequisites
+### Prerequisites
 
 - Node.js
 - npm
 
-### 📥 Installation
+### Installation
 
 Clone the repository:
 
@@ -165,7 +165,7 @@ npm run dev
 
 Vite will provide the local development URL.
 
-### 📦 Production Build
+### Production Build
 
 Create a production build:
 
