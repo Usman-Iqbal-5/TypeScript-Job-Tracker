@@ -166,7 +166,7 @@ git clone git@github.com:Usman-Iqbal-5/TypeScript-Job-Tracker.git
 Navigate to the project directory:
 
 ```bash
-cd job-tracker
+cd TypeScript-Job-Tracker
 ```
 
 Install the project dependencies:
