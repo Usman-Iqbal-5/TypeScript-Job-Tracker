@@ -29,15 +29,15 @@ Applications can be added, edited, searched, filtered, sorted and moved between 
 
 ## 🖼️ Screenshots
 
-### 📊 Dashboard and Kanban Board
+### Dashboard and Kanban Board
 
 ![Job Tracker Dashboard and Kanban Board](screenshots/full.jpeg)
 
-### ➕ Add Application
+### Add Application
 
 ![Add Application](screenshots/add-application.png)
 
-### 📄 Job Details
+### Job Details
 
 ![Job Details](screenshots/job-details.png)
 
