@@ -1,6 +1,6 @@
 # 💼 Job Tracker
 
-A job application tracker built with **TypeScript, Tailwind CSS and Vite**.
+A client-side job application tracker built with **TypeScript, Tailwind CSS and Vite**.
 
 The application uses a Kanban board to manage applications through four stages: **Applied, Interviewed, Offered and Rejected**.
 
