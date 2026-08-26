@@ -147,6 +147,14 @@ function DeleteJob(job: job): void {
   if (index !== -1) {
     jobs.splice(index, 1);
   }
+
+  // update flitered job array
+  const FilteredIndex = filteredJobs.findIndex((currentJob) => currentJob.id === job.id);
+
+  if (index !== -1) {
+    filteredJobs.splice(index, 1);
+  }
+
   // update UI KanbanBoard
   RemoveJobCardFromUI(job.id);
 }
