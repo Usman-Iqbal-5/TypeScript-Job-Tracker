@@ -5,6 +5,7 @@ import { type job, JobStatus } from "./types/job";
 import jobs from "./shared_state";
 import { updateDashboardCharts } from "./dashboard";
 import getJobStats from "./utils/jobStats";
+import exportJobsToCSV from "./utils/exportJobs";
 
 // Application state
 let clickedRating = 0;
@@ -22,6 +23,7 @@ const sideMenuOverlay =
 const sideMenu = document.querySelector<HTMLDivElement>("#sidemenu")!;
 const sideMenuCloseButton =
   document.querySelector<HTMLDivElement>("#sidemenu-close")!;
+const exportButton = document.querySelector<HTMLDivElement>("#export-jobs")!;
 
 const kanbanBoard = document.getElementById("kanban-board") as HTMLDivElement;
 const interviewedBoard = document.getElementById(
@@ -149,7 +151,9 @@ function DeleteJob(job: job): void {
   }
 
   // update flitered job array
-  const FilteredIndex = filteredJobs.findIndex((currentJob) => currentJob.id === job.id);
+  const FilteredIndex = filteredJobs.findIndex(
+    (currentJob) => currentJob.id === job.id,
+  );
 
   if (index !== -1) {
     filteredJobs.splice(index, 1);
@@ -193,7 +197,6 @@ function calculateDateFilter(): Date | null {
 function applyFilters() {
   const searchValue = searchBarInput.value.toLowerCase();
   const cutoffDate = calculateDateFilter();
-
 
   filteredJobs = jobs
     .filter((job) => {
@@ -326,36 +329,49 @@ function updateDashboardCounts() {
 }
 
 function createJobCard(job: job, board: HTMLDivElement): void {
-  console.log("CREATE CARD:", job.id);
   // job card
   const card = document.createElement("div");
   card.id = job.id;
   card.draggable = true;
   card.classList.add(
-    "w-full",
-    "p-2",
-    "pl-5",
-    "pr-3",
-    "rounded-lg",
-    "shadow-[0_0_10px_rgba(0,0,0,0.15)]",
-    "cursor-pointer",
-    "hover:bg-slate-500/5",
-    "job",
+     "w-full",
+  "box-border",
+  "min-w-0",
+  "p-2",
+  "pl-5",
+  "pr-3",
+  "rounded-lg",
+  "shadow-[0_0_10px_rgba(0,0,0,0.15)]",
+  "cursor-pointer",
+  "hover:bg-slate-500/5",
+  "job",
   );
 
   // Title Section - title and edit section
   const titleSection = document.createElement("div");
-  titleSection.classList.add("flex", "item-center", "gap-10");
+  titleSection.classList.add(
+  "flex",
+  "items-center",
+  "gap-2",
+  "min-w-0",
+  "w-full",
+);
 
   // Title Section - title
   const title = document.createElement("h5");
-  title.classList.add("text-[0.8rem]", "mb-1", "font-bold");
+  title.classList.add(
+  "text-[0.8rem]",
+  "mb-1",
+  "font-bold",
+  "min-w-0",
+  "truncate",
+);
   title.textContent = job.title;
   titleSection.append(title);
 
   //Title Section -  edit icon
   const EditIcon = createIcon(
-    ["w-[1.1rem]", "min-w-[17.6px]", "ml-auto", "hover:fill-green-500"],
+    ["w-[1.1rem]", "min-w-[17.6px]","shrink-0", "ml-auto", "hover:fill-green-500"],
     "M100.4 417.2C104.5 402.6 112.2 389.3 123 378.5L304.2 197.3L338.1 163.4C354.7 180 389.4 214.7 442.1 267.4L476 301.3L442.1 335.2L260.9 516.4C250.2 527.1 236.8 534.9 222.2 539L94.4 574.6C86.1 576.9 77.1 574.6 71 568.4C64.9 562.2 62.6 553.3 64.9 545L100.4 417.2zM156 413.5C151.6 418.2 148.4 423.9 146.7 430.1L122.6 517L209.5 492.9C215.9 491.1 221.7 487.8 226.5 483.2L155.9 413.5zM510 267.4C493.4 250.8 458.7 216.1 406 163.4L372 129.5C398.5 103 413.4 88.1 416.9 84.6C430.4 71 448.8 63.4 468 63.4C487.2 63.4 505.6 71 519.1 84.6L554.8 120.3C568.4 133.9 576 152.3 576 171.4C576 190.5 568.4 209 554.8 222.5C551.3 226 536.4 240.9 509.9 267.4z",
   );
 
@@ -398,7 +414,12 @@ function createJobCard(job: job, board: HTMLDivElement): void {
   // Rating seciton
   const ratingSection = document.createElement("div");
   ratingSection.id = "rating-section";
-  ratingSection.classList.add("flex", "items-center");
+  ratingSection.classList.add(
+    "flex",
+    "items-center",
+    "min-w-0",
+    "overflow-hidden",
+  );
   job.rating;
 
   for (let i = 1; i <= 5; i++) {
@@ -408,19 +429,33 @@ function createJobCard(job: job, board: HTMLDivElement): void {
     } else {
       spanEl.innerHTML = "&star;";
     }
-    spanEl.classList.add("text-amber-500", "text-lg");
+    spanEl.classList.add("text-amber-500", "text-base", "min-w-0");
     ratingSection.append(spanEl);
   }
 
   const ratingTitle = document.createElement("p");
   ratingTitle.textContent = `${job.rating} ${job.rating === 1 ? "star" : "stars"}`;
-  ratingTitle.classList.add("text-xs", "font-light", "ml-2");
+  ratingTitle.classList.add(
+    "text-xs",
+    "font-light",
+    "ml-2",
+    "whitespace-nowrap",
+    "shrink-0",
+  );
   ratingSection.append(ratingTitle);
 
   // card footer
   const cardFooter = document.createElement("div");
   cardFooter.id = "";
-  cardFooter.classList.add("w-fit", "mt-5", "flex", "items-center", "gap-3");
+  cardFooter.classList.add(
+    "w-full",
+    "mt-5",
+    "flex",
+    "items-center",
+    "gap-3",
+    "min-w-0",
+    "overflow-hidden",
+  );
 
   // anchor
   const url = document.createElement("a");
@@ -442,6 +477,7 @@ function createJobCard(job: job, board: HTMLDivElement): void {
     "cursor-pointer",
     "underline",
     "hover:text-indigo-700",
+    "shrink-0",
   );
   readmore.textContent = "more...";
   readmore.addEventListener("click", () => {
@@ -453,16 +489,18 @@ function createJobCard(job: job, board: HTMLDivElement): void {
   // date
   const datestamp = document.createElement("span");
   datestamp.classList.add(
-    "text-[0.7rem]",
-    "flex",
-    "items-center",
-    "p-1",
-    "h-5",
-    "font-extralight",
-    "rounded-lg",
-    "bg-gray-200",
-    "whitespace-nowrap",
-  );
+  "text-[clamp(0.5rem,1vw,0.7rem)]",
+  "flex",
+  "items-center",
+  "p-1",
+  "h-5",
+  "font-extralight",
+  "rounded-lg",
+  "bg-gray-200",
+  "whitespace-nowrap",
+  "shrink",
+  "min-w-0",
+);
   const date = job.appliedDate;
   datestamp.textContent = date;
 
@@ -474,15 +512,6 @@ function createJobCard(job: job, board: HTMLDivElement): void {
   card.append(locationSection);
   card.append(ratingSection);
   card.append(cardFooter);
-
-  console.log(
-    "APPENDING CARD:",
-    job.id,
-    "TO:",
-    board.id,
-    "CURRENT CHILDREN:",
-    board.children.length,
-  );
 
   board.append(card);
 }
@@ -665,11 +694,24 @@ function startApp(): void {
 function closeJobSide() {
   workspace?.classList.remove("grid-cols-[1fr_auto]");
   jobSideArea?.classList.add("hidden");
+
+  dashboard?.classList.remove("lg:w-11/12");
+  dashboard?.classList.add("lg:w-10/12");
+
+  kanbanBoard?.classList.remove("lg:w-11/12");
+  kanbanBoard?.classList.add("lg:w-10/12");
+
   document.querySelector<HTMLDivElement>("#timeline")?.remove();
 }
 
 function openJobSide(job: job) {
   workspace?.classList.add("grid-cols-[1fr_auto]");
+  dashboard?.classList.remove("lg:w-10/12");
+  dashboard?.classList.add("lg:w-11/12");
+
+  kanbanBoard?.classList.remove("lg:w-10/12");
+  kanbanBoard?.classList.add("lg:w-11/12");
+
   jobSideArea?.classList.remove("hidden");
   updateJobSideArea(job);
 }
@@ -791,10 +833,7 @@ function handleApplicationSubmit(event: SubmitEvent) {
   closeModal();
 }
 
-function addJob(
-  event: DragEvent,
-  status: JobStatus,
-): void {
+function addJob(event: DragEvent, status: JobStatus): void {
   const id = event.dataTransfer?.getData("text/plain")!;
   // update array
   const currentJob = jobs.find((job) => job.id === id)!;
@@ -921,6 +960,9 @@ sideMenuCloseButton.addEventListener("click", handleClosingSideMenu);
 sideMenuOverlay.addEventListener("click", handleClosingSideMenu);
 sideMenu.addEventListener("click", (event: PointerEvent) => {
   event.stopPropagation();
+});
+exportButton.addEventListener("click", () => {
+  exportJobsToCSV(jobs);
 });
 
 startApp();
