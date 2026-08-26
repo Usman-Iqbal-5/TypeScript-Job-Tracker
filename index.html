@@ -17,7 +17,7 @@
         <!-- Side Menu -->
         <div id="sidemenu__overlay" class="fixed inset-0 hidden text-sm text-white z-1000">
             <div id="sidemenu"
-                class="fixed top-0 left-0 w-11/12 h-full p-4 pt-8 border-r sm:w-64 bg-slate-900 border-r-white/20 z-2000">
+                class="fixed top-0 left-0 w-3/4 h-full p-4 pt-8 border-r sm:w-64 bg-slate-900 border-r-white/20 z-2000">
                 <div class="flex items-center w-full gap-x-2">
                     <svg xmlns="http://www.w3.org/2000/svg" class="w-5 fill-indigo-600"
                         viewBox="0 0 640 640"><!--!Font Awesome Free v7.3.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2026 Fonticons, Inc.-->
@@ -68,7 +68,7 @@
                     </svg>
                     <div>
                         <h1 class="text-lg font-semibold text-white">Dashboard</h1>
-                        <p class="text-xs text-white font-extralight">Overview of your job applications</p>
+                        <p class="hidden text-xs text-white sm:block font-extralight">Overview of your job applications</p>
                     </div>
                 </div>
                 <button id="add-application-button"
@@ -79,7 +79,7 @@
             <div id="workspace" class="grid w-full min-w-0">
                 <main id="main-area" class="flex flex-col items-center justify-center w-full min-w-0 my-5 gap-y-4">
                     <div id="dashboard"
-                        class="flex flex-col items-center gap-y-5 p-5 bg-[#F6F5F8] rounded-lg w-full sm:w-10/12 min-w-0">
+                        class="flex flex-col items-center gap-y-5 p-5 bg-[#F6F5F8] rounded-lg w-11/12 sm:w-10/12 min-w-0">
                         <div id="dash-stats"
                             class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-[1.5fr_1.5fr_1fr_1fr_1fr] gap-4 w-full">
                             <div id="dashboard__total"
@@ -207,12 +207,12 @@
                             </div>
                         </div>
                     </div>
-                    <div id="job-filter" class="flex flex-wrap w-full min-w-0 p-2 text-sm sm:w-10/12 text-white/80 gap-x-2">
+                    <div id="job-filter" class="flex flex-wrap w-11/12 min-w-0 gap-2 p-2 text-sm conten sm:w-10/12 text-white/80">
                         <input id="search"
-                            class="flex-1 p-2 border rounded-lg min-w-40 focus:border-indigo-600 bg-white/10 border-white/30 focus:outline-indigo-600 focus:outline-2 placeholder:text-white/80"
+                            class="flex-1 p-2 border rounded-lg basis-full md:basis-0 md:max-w-50 focus:border-indigo-600 bg-white/10 border-white/30 focus:outline-indigo-600 focus:outline-2 placeholder:text-white/80"
                             type="search" placeholder="Search jobs...">
                         <select
-                            class="p-2 border rounded-lg border-white/30 bg-white/10 focus:outline-indigo-600 focus:outline-2"
+                            class="flex-1 p-2 border rounded-lg sm:w-full md:max-w-fit border-white/30 bg-white/10 focus:outline-indigo-600 focus:outline-2"
                             id="rating-filter">
                             <option class="bg-slate-900" value="all" selected>Rating (All)</option>
                             <option class="bg-slate-900" value="5">&starf; &starf; &starf; &starf; &starf;</option>
@@ -222,17 +222,17 @@
                             <option class="bg-slate-900" value="1">&starf;</option>
                         </select>
                         <select
-                            class="p-2 border rounded-lg border-white/30 bg-white/10 focus:outline-indigo-600 focus:outline-2"
+                            class="flex-1 p-2 border rounded-lg md:max-w-fit border-white/30 bg-white/10 focus:outline-indigo-600 focus:outline-2"
                             id="date-filter">
                             <option class="bg-slate-900" value="all" selected>Date (All time)</option>
                             <option class="bg-slate-900" value="week">Past Week</option>
                             <option class="bg-slate-900" value="month">Past Month</option>
                             <option class="bg-slate-900" value="3-months">Past 3 Months</option>
                         </select>
-                        <div class="flex items-center gap-2 sm:ml-auto">
-                            <span>Sort by</span>
+                        <div class="flex items-center flex-1 gap-2 md:max-w-50 sm:ml-auto">
+                            <span class="whitespace-nowrap">Sort by</span>
                             <select
-                                class="p-2 border rounded-lg border-white/30 bg-white/10 focus:outline-indigo-600 focus:outline-2"
+                                class="w-full p-2 border rounded-lg min-w-40 border-white/30 bg-white/10 focus:outline-indigo-600 focus:outline-2"
                                 id="sort-filter">
                                 <option class="bg-slate-900" value="newest" selected>Newest</option>
                                 <option class="bg-slate-900" value="oldest">Oldest</option>
@@ -244,7 +244,7 @@
                         </div>
                     </div>
                     <div id="kanban-board"
-                        class="flex items-center w-full sm:w-10/12 gap-2 p-5 bg-[#F6F5F8] rounded-lg h-100 overflow-x-auto">
+                        class="flex items-center w-11/12 sm:w-10/12 gap-2 p-5 bg-[#F6F5F8] rounded-lg h-100 overflow-x-auto">
                         <section id="applied-section"
                             class=" flex-1  min-w-70 lg:min-w-0 h-full border-t-4 rounded-lg shadow-[0_0_10px_rgba(0,0,0,0.15)] border-t-blue-500 bg-gray-100">
                             <div id="applied"
