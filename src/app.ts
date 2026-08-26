@@ -657,22 +657,12 @@ function startApp(): void {
 function closeJobSide() {
   workspace?.classList.remove("grid-cols-[1fr_auto]");
   jobSideArea?.classList.add("hidden");
-  kanbanBoard.classList.remove("w-11/12");
-  kanbanBoard.classList.add("w-10/12");
-  dashboard.classList.remove("w-11/12");
-  dashboard.classList.add("w-10/12");
-
   document.querySelector<HTMLDivElement>("#timeline")?.remove();
 }
 
 function openJobSide(job: job) {
   workspace?.classList.add("grid-cols-[1fr_auto]");
   jobSideArea?.classList.remove("hidden");
-  kanbanBoard.classList.remove("w-10/12");
-  kanbanBoard.classList.add("w-11/12");
-  dashboard.classList.remove("w-10/12");
-  dashboard.classList.add("w-11/12");
-
   updateJobSideArea(job);
 }
 
