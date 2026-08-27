@@ -89,6 +89,9 @@ const dashboard = document.getElementById("dashboard") as HTMLDivElement;
 const dashboardTotalNum = document.querySelector<HTMLDivElement>(
   "#dashboard__total h2",
 )!;
+const dashboardRating = document.querySelector<HTMLSpanElement>(
+  "#dashboard__total span",
+)!;
 const dashboardAppliedlNum = document.querySelector<HTMLHeadingElement>(
   "#dashboard__applied h2",
 )!;
@@ -155,8 +158,8 @@ function DeleteJob(job: job): void {
     (currentJob) => currentJob.id === job.id,
   );
 
-  if (index !== -1) {
-    filteredJobs.splice(index, 1);
+  if (FilteredIndex !== -1) {
+    filteredJobs.splice(FilteredIndex, 1);
   }
 
   // update UI KanbanBoard
@@ -164,6 +167,13 @@ function DeleteJob(job: job): void {
 }
 
 // utlity functions
+
+function calculateAverageRating():string {
+  const total = jobs.reduce((sum, job)=>{
+    return job.rating + sum;
+  }, 0)
+  return (total/jobs.length).toFixed(1);
+}
 
 function calculateDateFilter(): Date | null {
   const now = new Date();
@@ -254,6 +264,10 @@ function applyFilters() {
 
 // Rendering UI Functions
 
+function updateAverageRating():void {
+  dashboardRating.textContent = calculateAverageRating();
+}
+
 function updateJobSideArea(job: job) {
   selectedSideJob = job;
 
@@ -334,44 +348,50 @@ function createJobCard(job: job, board: HTMLDivElement): void {
   card.id = job.id;
   card.draggable = true;
   card.classList.add(
-     "w-full",
-  "box-border",
-  "min-w-0",
-  "p-2",
-  "pl-5",
-  "pr-3",
-  "rounded-lg",
-  "shadow-[0_0_10px_rgba(0,0,0,0.15)]",
-  "cursor-pointer",
-  "hover:bg-slate-500/5",
-  "job",
+    "w-full",
+    "box-border",
+    "min-w-0",
+    "p-2",
+    "pl-5",
+    "pr-3",
+    "rounded-lg",
+    "shadow-[0_0_10px_rgba(0,0,0,0.15)]",
+    "cursor-pointer",
+    "hover:bg-slate-500/5",
+    "job",
   );
 
   // Title Section - title and edit section
   const titleSection = document.createElement("div");
   titleSection.classList.add(
-  "flex",
-  "items-center",
-  "gap-2",
-  "min-w-0",
-  "w-full",
-);
+    "flex",
+    "items-center",
+    "gap-2",
+    "min-w-0",
+    "w-full",
+  );
 
   // Title Section - title
   const title = document.createElement("h5");
   title.classList.add(
-  "text-[0.8rem]",
-  "mb-1",
-  "font-bold",
-  "min-w-0",
-  "truncate",
-);
+    "text-[0.8rem]",
+    "mb-1",
+    "font-bold",
+    "min-w-0",
+    "truncate",
+  );
   title.textContent = job.title;
   titleSection.append(title);
 
   //Title Section -  edit icon
   const EditIcon = createIcon(
-    ["w-[1.1rem]", "min-w-[17.6px]","shrink-0", "ml-auto", "hover:fill-green-500"],
+    [
+      "w-[1.1rem]",
+      "min-w-[17.6px]",
+      "shrink-0",
+      "ml-auto",
+      "hover:fill-green-500",
+    ],
     "M100.4 417.2C104.5 402.6 112.2 389.3 123 378.5L304.2 197.3L338.1 163.4C354.7 180 389.4 214.7 442.1 267.4L476 301.3L442.1 335.2L260.9 516.4C250.2 527.1 236.8 534.9 222.2 539L94.4 574.6C86.1 576.9 77.1 574.6 71 568.4C64.9 562.2 62.6 553.3 64.9 545L100.4 417.2zM156 413.5C151.6 418.2 148.4 423.9 146.7 430.1L122.6 517L209.5 492.9C215.9 491.1 221.7 487.8 226.5 483.2L155.9 413.5zM510 267.4C493.4 250.8 458.7 216.1 406 163.4L372 129.5C398.5 103 413.4 88.1 416.9 84.6C430.4 71 448.8 63.4 468 63.4C487.2 63.4 505.6 71 519.1 84.6L554.8 120.3C568.4 133.9 576 152.3 576 171.4C576 190.5 568.4 209 554.8 222.5C551.3 226 536.4 240.9 509.9 267.4z",
   );
 
@@ -411,11 +431,35 @@ function createJobCard(job: job, board: HTMLDivElement): void {
   locationTitle.classList.add("text-xs", "font-light");
   locationSection.append(locationTitle);
 
+  // date
+  const dateSection = document.createElement("div");
+  dateSection.classList.add("flex", "items-center");
+
+  const dateIcon = createIcon(
+    ["w-5"],
+    "M216 64C229.3 64 240 74.7 240 88L240 128L400 128L400 88C400 74.7 410.7 64 424 64C437.3 64 448 74.7 448 88L448 128L480 128C515.3 128 544 156.7 544 192L544 480C544 515.3 515.3 544 480 544L160 544C124.7 544 96 515.3 96 480L96 192C96 156.7 124.7 128 160 128L192 128L192 88C192 74.7 202.7 64 216 64zM216 176L160 176C151.2 176 144 183.2 144 192L144 240L496 240L496 192C496 183.2 488.8 176 480 176L216 176zM144 288L144 480C144 488.8 151.2 496 160 496L480 496C488.8 496 496 488.8 496 480L496 288L144 288z",
+  );
+  
+  dateSection.append(dateIcon);
+
+  const datestamp = document.createElement("p");
+  datestamp.classList.add(
+    "text-[0.7rem]",
+    "flex",
+    "items-center",
+    "px-1",
+    "font-light",
+  );
+  const date = job.appliedDate;
+  datestamp.textContent = date;
+  dateSection.append(datestamp);
+
   // Rating seciton
   const ratingSection = document.createElement("div");
   ratingSection.id = "rating-section";
   ratingSection.classList.add(
     "flex",
+    "mt-2",
     "items-center",
     "min-w-0",
     "overflow-hidden",
@@ -449,7 +493,7 @@ function createJobCard(job: job, board: HTMLDivElement): void {
   cardFooter.id = "";
   cardFooter.classList.add(
     "w-full",
-    "mt-5",
+    "mt-3",
     "flex",
     "items-center",
     "gap-3",
@@ -472,44 +516,26 @@ function createJobCard(job: job, board: HTMLDivElement): void {
   // read more button
   const readmore = document.createElement("button");
   readmore.classList.add(
-    "text-[0.72rem]",
+    "text-xs",
     "bg-transparent",
     "cursor-pointer",
-    "underline",
+    "hover:underline",
     "hover:text-indigo-700",
     "shrink-0",
   );
-  readmore.textContent = "more...";
+  readmore.innerHTML = "more >";
   readmore.addEventListener("click", () => {
     openJobSide(job);
   });
 
   cardFooter.append(readmore);
 
-  // date
-  const datestamp = document.createElement("span");
-  datestamp.classList.add(
-  "text-[clamp(0.5rem,1vw,0.7rem)]",
-  "flex",
-  "items-center",
-  "p-1",
-  "h-5",
-  "font-extralight",
-  "rounded-lg",
-  "bg-gray-200",
-  "whitespace-nowrap",
-  "shrink",
-  "min-w-0",
-);
-  const date = job.appliedDate;
-  datestamp.textContent = date;
-
-  cardFooter.append(datestamp);
 
   // appending
   card.append(titleSection);
   card.append(companySection);
   card.append(locationSection);
+  card.append(dateSection);
   card.append(ratingSection);
   card.append(cardFooter);
 
@@ -687,6 +713,7 @@ function renderJobs(jobArray: job[]) {
 
 function startApp(): void {
   applyFilters();
+  updateAverageRating();
   updateDashboardCharts();
   updateDashboardCounts();
 }
@@ -828,6 +855,7 @@ function handleApplicationSubmit(event: SubmitEvent) {
     editExistingJobId = null;
   }
 
+  updateAverageRating()
   updateDashboardCharts();
   updateDashboardCounts();
   closeModal();
@@ -840,7 +868,7 @@ function addJob(event: DragEvent, status: JobStatus): void {
   currentJob!.status = status;
 
   applyFilters();
-
+  updateAverageRating()
   updateDashboardCharts();
   updateDashboardCounts();
   closeJobSide();
@@ -937,13 +965,13 @@ applicationForm?.addEventListener("submit", handleApplicationSubmit);
 jobSideCloseButton.addEventListener("click", closeJobSide);
 jobSideEditButton.addEventListener("click", () => {
   if (!selectedSideJob) return;
-
   openEditModal(selectedSideJob);
 });
 jobSideDeleteButton.addEventListener("click", () => {
   if (!selectedSideJob) return;
   DeleteJob(selectedSideJob);
   closeJobSide();
+  updateAverageRating()
   updateDashboardCharts();
   updateKanbanCounts();
   updateDashboardCounts();
