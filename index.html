@@ -25,7 +25,7 @@
                         <path
                             d="M264 112L376 112C380.4 112 384 115.6 384 120L384 160L256 160L256 120C256 115.6 259.6 112 264 112zM208 120L208 544L432 544L432 120C432 89.1 406.9 64 376 64L264 64C233.1 64 208 89.1 208 120zM480 160L480 544L512 544C547.3 544 576 515.3 576 480L576 224C576 188.7 547.3 160 512 160L480 160zM160 544L160 160L128 160C92.7 160 64 188.7 64 224L64 480C64 515.3 92.7 544 128 544L160 544z" />
                     </svg>
-                    <h2 class="text-lg font-bold">Job<span class="text-indigo-600">Tracker</span></h2>
+                    <h2 class="text-xl font-bold">Job<span class="text-indigo-600">Tracker</span></h2>
                     <button id="sidemenu-close"
                         class="ml-auto text-lg font-bold bg-transparent cursor-pointer hover:text-indigo-600">
                         <svg xmlns="http://www.w3.org/2000/svg" class="w-5 fill-white hover:fill-current"
@@ -36,7 +36,10 @@
                     </button>
                 </div>
                 <nav class="py-2">
-                    <a href="#dashboard"
+                    <div class="text-xs text-white/80 uppercase mt-5">
+                        Navigation
+                    </div>
+                    <a href="#navbar"
                         class="flex items-center h-10 gap-2 p-2 rounded-lg cursor-pointer group hover:bg-indigo-500/20">
                         <svg xmlns="http://www.w3.org/2000/svg" class="w-5 fill-white group-hover:fill-indigo-600"
                             viewBox="0 0 640 640"><!--!Font Awesome Free v7.3.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2026 Fonticons, Inc.-->
@@ -54,6 +57,9 @@
                         </svg>
                         Job board
                     </a>
+                    <div class="text-xs text-white/80 uppercase mt-5">
+                        Manage
+                    </div>
                     <div id="export-jobs"
                         class="flex items-center h-10 gap-2 p-2 rounded-lg cursor-pointer group hover:bg-indigo-500/20">
                         <svg xmlns="http://www.w3.org/2000/svg" class="w-5 fill-white group-hover:fill-indigo-600"
@@ -67,7 +73,8 @@
             </div>
         </div>
         <div>
-            <header
+            <header 
+            id="navbar"
                 class="flex items-center justify-between w-full py-4 pl-5 pr-10 border-b bg-slate-900 border-b-white/20">
                 <div class="flex items-center gap-2">
                     <svg id="sidemenu-icon" xmlns="http://www.w3.org/2000/svg"

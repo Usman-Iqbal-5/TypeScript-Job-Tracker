@@ -6,6 +6,7 @@ import jobs from "./shared_state";
 import { updateDashboardCharts } from "./dashboard";
 import getJobStats from "./utils/jobStats";
 import exportJobsToCSV from "./utils/exportJobs";
+import { loadJobs, saveJobs } from "./utils/storage";
 
 // Application state
 let clickedRating = 0;
@@ -168,11 +169,11 @@ function DeleteJob(job: job): void {
 
 // utlity functions
 
-function calculateAverageRating():string {
-  const total = jobs.reduce((sum, job)=>{
+function calculateAverageRating(): string {
+  const total = jobs.reduce((sum, job) => {
     return job.rating + sum;
-  }, 0)
-  return (total/jobs.length).toFixed(1);
+  }, 0);
+  return (total / jobs.length).toFixed(1);
 }
 
 function calculateDateFilter(): Date | null {
@@ -213,7 +214,8 @@ function applyFilters() {
       const searchFilter =
         job.title.toLowerCase().includes(searchValue) ||
         job.company.toLowerCase().includes(searchValue) ||
-        job.notes?.toLowerCase().includes(searchValue);
+        job.notes?.toLowerCase().includes(searchValue) ||
+        job.location.toLowerCase().includes(searchValue);
 
       const ratingFilter =
         ratingFilterInput.value === "all" ||
@@ -264,7 +266,7 @@ function applyFilters() {
 
 // Rendering UI Functions
 
-function updateAverageRating():void {
+function updateAverageRating(): void {
   dashboardRating.textContent = calculateAverageRating();
 }
 
@@ -433,13 +435,13 @@ function createJobCard(job: job, board: HTMLDivElement): void {
 
   // date
   const dateSection = document.createElement("div");
-  dateSection.classList.add("flex", "items-center");
+  dateSection.classList.add("flex", "items-center", "gap-2");
 
   const dateIcon = createIcon(
     ["w-5"],
     "M216 64C229.3 64 240 74.7 240 88L240 128L400 128L400 88C400 74.7 410.7 64 424 64C437.3 64 448 74.7 448 88L448 128L480 128C515.3 128 544 156.7 544 192L544 480C544 515.3 515.3 544 480 544L160 544C124.7 544 96 515.3 96 480L96 192C96 156.7 124.7 128 160 128L192 128L192 88C192 74.7 202.7 64 216 64zM216 176L160 176C151.2 176 144 183.2 144 192L144 240L496 240L496 192C496 183.2 488.8 176 480 176L216 176zM144 288L144 480C144 488.8 151.2 496 160 496L480 496C488.8 496 496 488.8 496 480L496 288L144 288z",
   );
-  
+
   dateSection.append(dateIcon);
 
   const datestamp = document.createElement("p");
@@ -447,7 +449,6 @@ function createJobCard(job: job, board: HTMLDivElement): void {
     "text-[0.7rem]",
     "flex",
     "items-center",
-    "px-1",
     "font-light",
   );
   const date = job.appliedDate;
@@ -523,13 +524,12 @@ function createJobCard(job: job, board: HTMLDivElement): void {
     "hover:text-indigo-700",
     "shrink-0",
   );
-  readmore.innerHTML = "more >";
+  readmore.innerHTML = "Read More >";
   readmore.addEventListener("click", () => {
     openJobSide(job);
   });
 
   cardFooter.append(readmore);
-
 
   // appending
   card.append(titleSection);
@@ -712,6 +712,16 @@ function renderJobs(jobArray: job[]) {
 }
 
 function startApp(): void {
+  const savedJobs = loadJobs();
+
+  if (savedJobs === null) {
+    saveJobs();
+  } else {
+    jobs.length = 0;
+
+    savedJobs.forEach((savedJob) => jobs.push(savedJob));
+  }
+
   applyFilters();
   updateAverageRating();
   updateDashboardCharts();
@@ -855,7 +865,8 @@ function handleApplicationSubmit(event: SubmitEvent) {
     editExistingJobId = null;
   }
 
-  updateAverageRating()
+  saveJobs();
+  updateAverageRating();
   updateDashboardCharts();
   updateDashboardCounts();
   closeModal();
@@ -867,8 +878,9 @@ function addJob(event: DragEvent, status: JobStatus): void {
   const currentJob = jobs.find((job) => job.id === id)!;
   currentJob!.status = status;
 
+  saveJobs();
   applyFilters();
-  updateAverageRating()
+  updateAverageRating();
   updateDashboardCharts();
   updateDashboardCounts();
   closeJobSide();
@@ -970,12 +982,12 @@ jobSideEditButton.addEventListener("click", () => {
 jobSideDeleteButton.addEventListener("click", () => {
   if (!selectedSideJob) return;
   DeleteJob(selectedSideJob);
+  saveJobs();
   closeJobSide();
-  updateAverageRating()
+  updateAverageRating();
   updateDashboardCharts();
   updateKanbanCounts();
   updateDashboardCounts();
-  console.log(selectedSideJob);
 });
 
 searchBarInput.addEventListener("input", applyFilters);
