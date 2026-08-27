@@ -8,7 +8,7 @@ Applications can be added, edited, searched, filtered, sorted and moved between 
 
 ## 🖥️ Demo
 
-Live Demo: type-script-job-tracker.vercel.app
+Live Demo: https://type-script-job-tracker.vercel.app/
 
 ## ✨ Features
 
