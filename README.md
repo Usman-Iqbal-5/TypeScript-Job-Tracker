@@ -6,6 +6,10 @@ The application uses a Kanban board to manage applications through four stages: 
 
 Applications can be added, edited, searched, filtered, sorted and moved between stages using drag and drop. The dashboard provides an overview of applications with statistics and charts.
 
+## 🖥️ Demo
+
+Live Demo: https://type-script-job-tracker.vercel.app/
+
 ## ✨ Features
 
 - 📌 Kanban board with four application stages
