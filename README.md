@@ -18,7 +18,7 @@ https://type-script-job-tracker.vercel.app/
 - 📄 View detailed job information
 - 💾 Persistent application data using localStorage
 - 📤 Export applications to CSV
-- 🔎 Search by job title, company and notes
+- 🔎 Search by job title, company, location and notes
 - ⭐ Five-star application ratings
 - 📅 Filter by application date
 - ↕️ Sort by:
@@ -30,6 +30,7 @@ https://type-script-job-tracker.vercel.app/
   - Company Z–A
 - 📊 Application statistics
 - 📈 Application status charts
+- 🕒 Application timeline showing dates for each recruitment stage
 - ✅ Client-side form validation
 - 📱 Responsive layout
 
